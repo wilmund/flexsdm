@@ -21,6 +21,13 @@ test_that("part_senv", {
 
   expect_equal(class(part1), "list")
 
+  # env_sim must be a real environmental Euclidean distance between groups,
+  # not a degenerate constant. It was previously computed on a logical vector
+  # (split() had been overwritten by complete.cases()), which forced env_sim
+  # to 0 for every partition and silently disabled this selection criterion.
+  expect_true(all(is.finite(part1$best_part_info$env_sim)))
+  expect_gt(max(part1$best_part_info$env_sim), 0)
+
   # Only with presences
   spp1 <- spp1 %>% dplyr::filter(pr_ab == 1)
   part2 <- part_senv(

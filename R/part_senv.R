@@ -232,7 +232,7 @@ unique list values in pr_ab column are: ",
 
     Env.P1 <- cbind(part[i], Env.P)
     Env.P1 <- Env.P1[stats::complete.cases(Env.P1), ]
-    Env.P1 <- stats::complete.cases(Env.P1[, -1], Env.P1[, 1])
+    Env.P1 <- split(Env.P1[, -1], Env.P1[, 1])
     euq_c <- list()
     for (r in 1:ncol(cmb)) {
       euq_c[[r]] <- euc_dist(
