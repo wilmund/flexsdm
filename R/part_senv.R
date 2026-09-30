@@ -179,7 +179,7 @@ unique list values in pr_ab column are: ",
     if (include_coords) {
       part[[i]] <- stats::kmeans(scale(data[, -1]), centers = cell_size[i])$cluster
     } else {
-      part[[i]] <- stats::kmeans(scale(data[, !names(data) %in% c(pr_ab, x, y)]), centers = cell_size[i])$cluster
+      part[[i]] <- stats::kmeans(scale(data[, !names(data) %in% c("pr_ab", "x", "y")]), centers = cell_size[i])$cluster
     }
   }
 
