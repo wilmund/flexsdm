@@ -86,7 +86,9 @@ the online database Calflora.
 `  col ``=`` ``cols`\
 `)`
 
-![](v06_Extrapolation_example_files/figure-html/raw%20data-1.png)
+![plot of chunk raw data](figures/v06-raw_data-1.png)
+
+plot of chunk raw data
 
 ## Delimit calibration area
 
@@ -115,7 +117,9 @@ select our pseudo-absence locations.
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ca``, add ``=`` ``TRUE``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``hespero``[``, `[`c`](https://rdrr.io/r/base/c.html)`(``"x"``, ``"y"``)``]``, col ``=`` ``"black"``, pch ``=`` ``16``)`
 
-![](v06_Extrapolation_example_files/figure-html/calibration%20area-1.png)
+![plot of chunk calibration area](figures/v06-calibration_area-1.png)
+
+plot of chunk calibration area
 
 ## Create pseudo-absence data
 
@@ -151,7 +155,10 @@ pseudo-absence data that can be used in our SDMs.
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``psa``[``, `[`c`](https://rdrr.io/r/base/c.html)`(``"x"``, ``"y"``)``]``, cex ``=`` ``0.8``, pch ``=`` ``16``, col ``=`` ``"black"``)`` ``# Pseudo-absences`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``hespero``[``, `[`c`](https://rdrr.io/r/base/c.html)`(``"x"``, ``"y"``)``]``, col ``=`` ``"yellow"``, pch ``=`` ``16``, cex ``=`` ``1.5``)`` ``# Presences`
 
-![](v06_Extrapolation_example_files/figure-html/pseudo-absence%20data-1.png)
+![plot of chunk pseudo-absence
+data](figures/v06-pseudo-absence_data-1.png)
+
+plot of chunk pseudo-absence data
 
 \
 \
@@ -159,20 +166,20 @@ pseudo-absence data that can be used in our SDMs.
 `# Bind a presences and pseudo-absences`\
 `hespero_pa`` ``<-`` `[`bind_rows`](https://dplyr.tidyverse.org/reference/bind_rows.html)`(``hespero``, ``psa``)`\
 `hespero_pa`` ``# Presence-Pseudo-absence database`\
-`#> ``# A tibble: 42 × 3`\
+`#> # A tibble: 42 × 3`\
 `#>          x        y pr_ab`\
-`#>      ``<dbl>``    ``<dbl>`` ``<dbl>`\
-`#> `` 1`` ``316``923. -``557``843.``     1`\
-`#> `` 2`` ``317``155. -``559``234.``     1`\
-`#> `` 3`` ``316``960. -``558``186.``     1`\
-`#> `` 4`` ``314``347. -``559``648.``     1`\
-`#> `` 5`` ``317``348. -``557``349.``     1`\
-`#> `` 6`` ``316``753. -``559``679.``     1`\
-`#> `` 7`` ``316``777. -``558``644.``     1`\
-`#> `` 8`` ``317``050. -``559``043.``     1`\
-`#> `` 9`` ``316``655. -``559``928.``     1`\
-`#> ``10`` ``316``418. -``567``439.``     1`\
-`#> ``# ℹ 32 more rows`
+`#>      <dbl>    <dbl> <dbl>`\
+`#>  1 316923. -557843.     1`\
+`#>  2 317155. -559234.     1`\
+`#>  3 316960. -558186.     1`\
+`#>  4 314347. -559648.     1`\
+`#>  5 317348. -557349.     1`\
+`#>  6 316753. -559679.     1`\
+`#>  7 316777. -558644.     1`\
+`#>  8 317050. -559043.     1`\
+`#>  9 316655. -559928.     1`\
+`#> 10 316418. -567439.     1`\
+`#> # ℹ 32 more rows`
 
 ## Partition data for evaluating models
 
@@ -262,7 +269,9 @@ species is found!
 `# points(hespero$x, hespero$y, pch = 19)`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``mpred``$``svm``, main ``=`` ``"SVM"``)`
 
-![](v06_Extrapolation_example_files/figure-html/comparison%20maps-1.png)
+![plot of chunk comparison maps](figures/v06-comparison_maps-1.png)
+
+plot of chunk comparison maps
 
 \
 `# points(hespero$x, hespero$y, pch = 19)`
@@ -298,7 +307,10 @@ Uni and bivariate partial dependence plots for the GLM:
 `  projection_data ``=`` ``somevar`\
 `)`
 
-![](v06_Extrapolation_example_files/figure-html/glm%20partial%20dependence%20plots-1.png)
+![plot of chunk glm partial dependence
+plots](figures/v06-glm_partial_dependence_plots-1.png)
+
+plot of chunk glm partial dependence plots
 
 \
 [`p_bpdp`](https://sjevelazco.github.io/flexsdm/reference/p_bpdp.md)`(`\
@@ -307,7 +319,10 @@ Uni and bivariate partial dependence plots for the GLM:
 `  training_boundaries ``=`` ``"convexh"`\
 `)`
 
-![](v06_Extrapolation_example_files/figure-html/glm%20partial%20dependence%20plots-2.png)
+![plot of chunk glm partial dependence
+plots](figures/v06-glm_partial_dependence_plots-2.png)
+
+plot of chunk glm partial dependence plots
 
 Uni and bivariate partial dependence plots for the GBM:
 
@@ -318,7 +333,10 @@ Uni and bivariate partial dependence plots for the GBM:
 `  projection_data ``=`` ``somevar`\
 `)`
 
-![](v06_Extrapolation_example_files/figure-html/gbm%20partial%20dependence%20plots-1.png)
+![plot of chunk gbm partial dependence
+plots](figures/v06-gbm_partial_dependence_plots-1.png)
+
+plot of chunk gbm partial dependence plots
 
 \
 [`p_bpdp`](https://sjevelazco.github.io/flexsdm/reference/p_bpdp.md)`(`\
@@ -328,7 +346,10 @@ Uni and bivariate partial dependence plots for the GBM:
 `  resolution ``=`` ``100`\
 `)`
 
-![](v06_Extrapolation_example_files/figure-html/gbm%20partial%20dependence%20plots-2.png)
+![plot of chunk gbm partial dependence
+plots](figures/v06-gbm_partial_dependence_plots-2.png)
+
+plot of chunk gbm partial dependence plots
 
 Uni and bivariate partial dependence plots for the SVM:
 
@@ -339,7 +360,10 @@ Uni and bivariate partial dependence plots for the SVM:
 `  projection_data ``=`` ``somevar`\
 `)`
 
-![](v06_Extrapolation_example_files/figure-html/svm%20partial%20dependence%20plots-1.png)
+![plot of chunk svm partial dependence
+plots](figures/v06-svm_partial_dependence_plots-1.png)
+
+plot of chunk svm partial dependence plots
 
 \
 [`p_bpdp`](https://sjevelazco.github.io/flexsdm/reference/p_bpdp.md)`(`\
@@ -348,7 +372,10 @@ Uni and bivariate partial dependence plots for the SVM:
 `  training_boundaries ``=`` ``"convexh"`\
 `)`
 
-![](v06_Extrapolation_example_files/figure-html/svm%20partial%20dependence%20plots-2.png)
+![plot of chunk svm partial dependence
+plots](figures/v06-svm_partial_dependence_plots-2.png)
+
+plot of chunk svm partial dependence plots
 
 These plots show a really interesting story! Most notably, the GLM and
 GBM show consistently high habitat suitability for those areas that have
@@ -434,7 +461,10 @@ Shape method.
 `  col ``=`` ``cl`\
 `)`
 
-![](v06_Extrapolation_example_files/figure-html/comparison%20extrapolation%20outputs-1.png)
+![plot of chunk comparison extrapolation
+outputs](figures/v06-comparison_extrapolation_outputs-1.png)
+
+plot of chunk comparison extrapolation outputs
 
 We can also explore extrapolation or suitability patterns in
 environmental and geographic space, using just one function. To do that,
@@ -463,7 +493,10 @@ portion of the CFP.
 `)`\
 `#> Number of cell used to plot 3642 (5%)`
 
-![](v06_Extrapolation_example_files/figure-html/graphical%20explore%20-%20Mahalanobis-1.png)
+![plot of chunk graphical explore -
+Mahalanobis](figures/v06-graphical_explore_-_Mahalanobis-1.png)
+
+plot of chunk graphical explore - Mahalanobis
 
 Let’s explore univariate and combinatorial extrapolation. The former is
 defined as the projecting data outside range of training conditions,
@@ -486,7 +519,10 @@ the range of training conditions.
 `)`\
 `#> Number of cell used to plot 3642 (5%)`
 
-![](v06_Extrapolation_example_files/figure-html/graphical%20explore%20-%20uni_comb%20extrapolation-1.png)
+![plot of chunk graphical explore - uni_comb
+extrapolation](figures/v06-graphical_explore_-_uni_comb_extrapolation-1.png)
+
+plot of chunk graphical explore - uni_comb extrapolation
 
 ## Truncating SDMs predictions based on extrapolation thresholds
 
@@ -520,7 +556,10 @@ comparison.
 `  ``)`\
 `#> Number of cell used to plot 3642 (5%)`
 
-![](v06_Extrapolation_example_files/figure-html/explore%20extrapolation%20thresholds-1.png)
+![plot of chunk explore extrapolation
+thresholds](figures/v06-explore_extrapolation_thresholds-1.png)
+
+plot of chunk explore extrapolation thresholds
 
 \
 \
@@ -542,7 +581,10 @@ comparison.
 `  ``)`\
 `#> Number of cell used to plot 3642 (5%)`
 
-![](v06_Extrapolation_example_files/figure-html/explore%20extrapolation%20thresholds-2.png)
+![plot of chunk explore extrapolation
+thresholds](figures/v06-explore_extrapolation_thresholds-2.png)
+
+plot of chunk explore extrapolation thresholds
 
 \
 \
@@ -564,7 +606,10 @@ comparison.
 `  ``)`\
 `#> Number of cell used to plot 3642 (5%)`
 
-![](v06_Extrapolation_example_files/figure-html/explore%20extrapolation%20thresholds-3.png)
+![plot of chunk explore extrapolation
+thresholds](figures/v06-explore_extrapolation_thresholds-3.png)
+
+plot of chunk explore extrapolation thresholds
 
 Values of 1 (yellow one) depict the environmental and geographical
 regions will constraint our models suitability (truncate). Note that the
@@ -617,7 +662,10 @@ reduce suitability.
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``svm_trunc``$``` `100` ```, main ``=`` ``"SVM; extra threshold = 100"``, col ``=`` ``cl``)`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``svm_trunc``$``` `500` ```, main ``=`` ``"SVM; extra threshold = 500"``, col ``=`` ``cl``)`
 
-![](v06_Extrapolation_example_files/figure-html/comparison%20truncated%20outputs-1.png)
+![plot of chunk comparison truncated
+outputs](figures/v06-comparison_truncated_outputs-1.png)
+
+plot of chunk comparison truncated outputs
 
 Based on these maps, you can see that the lower the extrapolation
 threshold, the more restricted the habitat suitability patterns, while

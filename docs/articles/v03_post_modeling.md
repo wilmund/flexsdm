@@ -51,21 +51,7 @@ Install the flexsdm package. You can install the released version of
 `# devtools::install_github('sjevelazco/flexsdm')`\
 [`library`](https://rdrr.io/r/base/library.html)`(`[`flexsdm`](https://sjevelazco.github.io/flexsdm/)`)`\
 [`library`](https://rdrr.io/r/base/library.html)`(`[`dplyr`](https://dplyr.tidyverse.org)`)`\
-`#> `\
-`#> Attaching package: 'dplyr'`\
-`#> The following objects are masked from 'package:stats':`\
-`#> `\
-`#>     filter, lag`\
-`#> The following objects are masked from 'package:base':`\
-`#> `\
-`#>     intersect, setdiff, setequal, union`\
-[`library`](https://rdrr.io/r/base/library.html)`(`[`terra`](https://rspatial.org/)`)`\
-`#> terra 1.9.46`\
-`#> `\
-`#> Attaching package: 'terra'`\
-`#> The following object is masked from 'package:knitr':`\
-`#> `\
-`#>     spin`
+[`library`](https://rdrr.io/r/base/library.html)`(`[`terra`](https://rspatial.org/)`)`
 
 ## Project directory setup
 
@@ -214,30 +200,50 @@ Next, fit different models
 
 ### 1. Fit and ensemble the models above
 
-\
-`# Fit and ensemble the models. To choose the arguments that best fit your own data, see all options available in [fit_ensemble](https://sjevelazco.github.io/flexsdm/reference/fit_ensemble.html)`\
-`mensemble`` ``<-`` `[`fit_ensemble`](https://sjevelazco.github.io/flexsdm/reference/fit_ensemble.md)`(`\
-`  models ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``mglm``, ``mraf``, ``mgbm``)``,`\
-`  ens_method ``=`` ``"meansup"``,`\
-`  thr ``=`` ``NULL``,`\
-`  thr_model ``=`` ``"max_sens_spec"``,`\
-`  metric ``=`` ``"TSS"`\
-`)`\
-`#>   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%`
+``` r
+# Fit and ensemble the models. To choose the arguments that best fit your own data, see all options available in [fit_ensemble](https://sjevelazco.github.io/flexsdm/reference/fit_ensemble.html)
+mensemble <- fit_ensemble(
+  models = list(mglm, mraf, mgbm),
+  ens_method = "meansup",
+  thr = NULL,
+  thr_model = "max_sens_spec",
+  metric = "TSS"
+)
+#> 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%
+```
 
 You can also fit a model using an Ensembles of Small Models approach. In
 this example, we fit without threshold specification and with k-fold
 cross-validation.
 
-\
-`msmall`` ``<-`` `[`esm_gam`](https://sjevelazco.github.io/flexsdm/reference/esm_gam.md)`(`\
-`  data ``=`` ``some_sp``,`\
-`  response ``=`` ``"pr_ab"``,`\
-`  predictors ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"CFP_1"``, ``"CFP_2"``, ``"CFP_3"``, ``"CFP_4"``)``,`\
-`  partition ``=`` ``".part"``,`\
-`  thr ``=`` ``NULL`\
-`)`\
-`#>   |                                                                              |                                                                      |   0%  |                                                                              |============                                                          |  17%  |                                                                              |=======================                                               |  33%  |                                                                              |===================================                                   |  50%  |                                                                              |===============================================                       |  67%  |                                                                              |==========================================================            |  83%  |                                                                              |======================================================================| 100%`
+``` r
+msmall <- esm_gam(
+  data = some_sp,
+  response = "pr_ab",
+  predictors = c("CFP_1", "CFP_2", "CFP_3", "CFP_4"),
+  partition = ".part",
+  thr = NULL
+)
+#> 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |======================================================================| 100%
+```
 
 Finally, we can predict different kinds of models from the same data
 (some_sp).
@@ -278,7 +284,9 @@ continuous and/or binary predictions.
 `ind_p_rst`` ``<-`` ``terra``::`[`rast`](https://rspatial.github.io/terra/reference/rast.html)`(``ind_p``)`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ind_p_rst``)`
 
-![](v03_post_modeling_files/figure-html/sdm_predict-1.png)
+![plot of chunk sdm_predict](figures/v03-sdm_predict-1.png)
+
+plot of chunk sdm_predict
 
 \
 \
@@ -331,14 +339,16 @@ continuous and/or binary predictions.
 `#> varnames    : somevar`\
 `#>               somevar`\
 `#> names       :      gbm, max_fpb`\
-`#> min values  : 0.000077,       0`\
-`#> max values  : 0.953071,       1`\
+`#> min values  : 0.000069,       0`\
+`#> max values  : 0.952234,       1`\
 \
 `# Plot to see this layers`\
 `list_p_rst`` ``<-`` ``terra``::`[`rast`](https://rspatial.github.io/terra/reference/rast.html)`(``list_p``)`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``list_p_rst``)`
 
-![](v03_post_modeling_files/figure-html/sdm_predict-2.png)
+![plot of chunk sdm_predict](figures/v03-sdm_predict-2.png)
+
+plot of chunk sdm_predict
 
 \
 \
@@ -372,7 +382,9 @@ continuous and/or binary predictions.
 `ensemble_p_rst`` ``<-`` ``terra``::`[`rast`](https://rspatial.github.io/terra/reference/rast.html)`(``ensemble_p``)`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ensemble_p_rst``)`
 
-![](v03_post_modeling_files/figure-html/sdm_predict-3.png)
+![plot of chunk sdm_predict](figures/v03-sdm_predict-3.png)
+
+plot of chunk sdm_predict
 
 \
 \
@@ -404,7 +416,9 @@ continuous and/or binary predictions.
 `small_p_rst`` ``<-`` ``terra``::`[`rast`](https://rspatial.github.io/terra/reference/rast.html)`(``small_p``)`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``small_p_rst``)`
 
-![](v03_post_modeling_files/figure-html/sdm_predict-4.png)
+![plot of chunk sdm_predict](figures/v03-sdm_predict-4.png)
+
+plot of chunk sdm_predict
 
 ### 2. Merge model performance tables
 
@@ -417,21 +431,21 @@ output.
 `# Load abies data`\
 [`data`](https://rdrr.io/r/utils/data.html)`(``abies``)`\
 `abies`\
-`#> ``# A tibble: 1,400 × 13`\
+`#> # A tibble: 1,400 × 13`\
 `#>       id pr_ab        x        y   aet   cwd  tmin ppt_djf ppt_jja    pH    awc`\
-`#>    ``<int>`` ``<dbl>``    ``<dbl>``    ``<dbl>`` ``<dbl>`` ``<dbl>`` ``<dbl>``   ``<dbl>``   ``<dbl>`` ``<dbl>``  ``<dbl>`\
-`#> `` 1``   715     0  -``95``417.``  ``314``240.  323.  546.  1.24    62.7   17.8   5.77 0.108 `\
-`#> `` 2``  ``5``680     0   ``98``987. -``159``415.``  448.  815.  9.43   130.     6.43  5.60 0.160 `\
-`#> `` 3``  ``7``907     0  ``121``474.  -``99``463.``  182.  271. -``4.95``   151.    11.2   0    0     `\
-`#> `` 4``  ``1``850     0  -``39``976.``  -``17``456.``  372.  946.  8.78   116.     2.70  6.41 0.097``2`\
-`#> `` 5``  ``1``702     0  ``111``372.  -``91``404.``  209.  399. -``4.03``   165.     9.27  0    0     `\
-`#> `` 6`` ``10``036     0 -``255``715.``  ``392``229.  308.  535.  4.66   166.    16.5   5.70 0.077``7`\
-`#> `` 7`` ``12``384     0 -``311``765.``  ``380``213.  568.  352.  4.38   480.    41.2   5.80 0.110 `\
-`#> `` 8``  ``6``513     0  ``111``360. -``120``229.``  327.  633.  4.93   163.     8.91  1.18 0.011``6`\
-`#> `` 9``  ``9``884     0 -``284``326.``  ``442``136.  377.  446.  3.99   296.    16.8   5.96 0.090``0`\
-`#> ``10``  ``8``651     0  ``137``640. -``110``538.``  215.  265. -``4.62``   180.     9.57  0    0     `\
-`#> ``# ℹ 1,390 more rows`\
-`#> ``# ℹ 2 more variables: depth <dbl>, landform <fct>`\
+`#>    <int> <dbl>    <dbl>    <dbl> <dbl> <dbl> <dbl>   <dbl>   <dbl> <dbl>  <dbl>`\
+`#>  1   715     0  -95417.  314240.  323.  546.  1.24    62.7   17.8   5.77 0.108 `\
+`#>  2  5680     0   98987. -159415.  448.  815.  9.43   130.     6.43  5.60 0.160 `\
+`#>  3  7907     0  121474.  -99463.  182.  271. -4.95   151.    11.2   0    0     `\
+`#>  4  1850     0  -39976.  -17456.  372.  946.  8.78   116.     2.70  6.41 0.0972`\
+`#>  5  1702     0  111372.  -91404.  209.  399. -4.03   165.     9.27  0    0     `\
+`#>  6 10036     0 -255715.  392229.  308.  535.  4.66   166.    16.5   5.70 0.0777`\
+`#>  7 12384     0 -311765.  380213.  568.  352.  4.38   480.    41.2   5.80 0.110 `\
+`#>  8  6513     0  111360. -120229.  327.  633.  4.93   163.     8.91  1.18 0.0116`\
+`#>  9  9884     0 -284326.  442136.  377.  446.  3.99   296.    16.8   5.96 0.0900`\
+`#> 10  8651     0  137640. -110538.  215.  265. -4.62   180.     9.57  0    0     `\
+`#> # ℹ 1,390 more rows`\
+`#> # ℹ 2 more variables: depth <dbl>, landform <fct>`\
 \
 `# Use a subset of the data to keep this tutorial fast to run`\
 [`set.seed`](https://rdrr.io/r/base/Random.html)`(``10``)`\
@@ -526,17 +540,17 @@ Build some models to use for the performance table merge
 `#> Partition number: 3/3`\
 \
 `rf_t1``$``performance`\
-`#> ``# A tibble: 1 × 35`\
+`#> # A tibble: 1 × 35`\
 `#>    mtry ntree model threshold   thr_value n_presences n_absences TPR_mean TPR_sd`\
-`#>   ``<dbl>`` ``<dbl>`` ``<chr>`` ``<chr>``           ``<dbl>``       ``<int>``      ``<int>``    ``<dbl>``  ``<dbl>`\
-`#> ``1``     2   500 raf   max_sens_s…     0.592         210        210    0.857 0.051``5`\
-`#> ``# ℹ 26 more variables: TNR_mean <dbl>, TNR_sd <dbl>, W_TPR_TNR_mean <dbl>,`\
-`#> ``#   W_TPR_TNR_sd <dbl>, SORENSEN_mean <dbl>, SORENSEN_sd <dbl>,`\
-`#> ``#   JACCARD_mean <dbl>, JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>,`\
-`#> ``#   OR_mean <dbl>, OR_sd <dbl>, TSS_mean <dbl>, TSS_sd <dbl>, KAPPA_mean <dbl>,`\
-`#> ``#   KAPPA_sd <dbl>, MCC_mean <dbl>, MCC_sd <dbl>, AUC_mean <dbl>, AUC_sd <dbl>,`\
-`#> ``#   BOYCE_mean <dbl>, BOYCE_sd <dbl>, CRPS_mean <dbl>, CRPS_sd <dbl>,`\
-`#> ``#   IMAE_mean <dbl>, IMAE_sd <dbl>`\
+`#>   <dbl> <dbl> <chr> <chr>           <dbl>       <int>      <int>    <dbl>  <dbl>`\
+`#> 1     2   500 raf   max_sens_s…     0.592         210        210    0.857 0.0515`\
+`#> # ℹ 26 more variables: TNR_mean <dbl>, TNR_sd <dbl>, W_TPR_TNR_mean <dbl>,`\
+`#> #   W_TPR_TNR_sd <dbl>, SORENSEN_mean <dbl>, SORENSEN_sd <dbl>,`\
+`#> #   JACCARD_mean <dbl>, JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>,`\
+`#> #   OR_mean <dbl>, OR_sd <dbl>, TSS_mean <dbl>, TSS_sd <dbl>, KAPPA_mean <dbl>,`\
+`#> #   KAPPA_sd <dbl>, MCC_mean <dbl>, MCC_sd <dbl>, AUC_mean <dbl>, AUC_sd <dbl>,`\
+`#> #   BOYCE_mean <dbl>, BOYCE_sd <dbl>, CRPS_mean <dbl>, CRPS_sd <dbl>,`\
+`#> #   IMAE_mean <dbl>, IMAE_sd <dbl>`\
 `# Note in rf_t1$performance the best model was the one with mtry = 3 and threshold = 'max_sens_spec'`
 
 Finally, merge the three sdm performance tables.
@@ -545,23 +559,23 @@ Finally, merge the three sdm performance tables.
 `merge_df`` ``<-`` `[`sdm_summarize`](https://sjevelazco.github.io/flexsdm/reference/sdm_summarize.md)`(``models ``=`` `[`list`](https://rdrr.io/r/base/list.html)`(``gam_t1``, ``glm_t1``, ``rf_t1``)``)`\
 \
 `merge_df`\
-`#> ``# A tibble: 7 × 36`\
+`#> # A tibble: 7 × 36`\
 `#>   model_ID model threshold     thr_value n_presences n_absences TPR_mean  TPR_sd`\
-`#>      ``<int>`` ``<chr>`` ``<chr>``             ``<dbl>``       ``<int>``      ``<int>``    ``<dbl>``   ``<dbl>`\
-`#> ``1``        1 gam   equal_sens_s…     0.518         210        210    0.702 0.003``40`\
-`#> ``2``        1 gam   max_sens_spec     0.601         210        210    0.682 0.105  `\
-`#> ``3``        1 gam   max_sorensen      0.351         210        210    0.836 0.046``3`` `\
-`#> ``4``        2 glm   equal_sens_s…     0.519         210        210    0.630 0.048``7`` `\
-`#> ``5``        2 glm   max_sens_spec     0.485         210        210    0.633 0.216  `\
-`#> ``6``        2 glm   max_sorensen      0.299         210        210    0.908 0.031``1`` `\
-`#> ``7``        3 raf   max_sens_spec     0.592         210        210    0.857 0.051``5`` `\
-`#> ``# ℹ 28 more variables: TNR_mean <dbl>, TNR_sd <dbl>, W_TPR_TNR_mean <dbl>,`\
-`#> ``#   W_TPR_TNR_sd <dbl>, SORENSEN_mean <dbl>, SORENSEN_sd <dbl>,`\
-`#> ``#   JACCARD_mean <dbl>, JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>,`\
-`#> ``#   OR_mean <dbl>, OR_sd <dbl>, TSS_mean <dbl>, TSS_sd <dbl>, KAPPA_mean <dbl>,`\
-`#> ``#   KAPPA_sd <dbl>, MCC_mean <dbl>, MCC_sd <dbl>, AUC_mean <dbl>, AUC_sd <dbl>,`\
-`#> ``#   BOYCE_mean <dbl>, BOYCE_sd <dbl>, CRPS_mean <dbl>, CRPS_sd <dbl>,`\
-`#> ``#   IMAE_mean <dbl>, IMAE_sd <dbl>, mtry <dbl>, ntree <dbl>`
+`#>      <int> <chr> <chr>             <dbl>       <int>      <int>    <dbl>   <dbl>`\
+`#> 1        1 gam   equal_sens_s…     0.518         210        210    0.702 0.00340`\
+`#> 2        1 gam   max_sens_spec     0.601         210        210    0.682 0.105  `\
+`#> 3        1 gam   max_sorensen      0.351         210        210    0.836 0.0463 `\
+`#> 4        2 glm   equal_sens_s…     0.519         210        210    0.630 0.0487 `\
+`#> 5        2 glm   max_sens_spec     0.485         210        210    0.633 0.216  `\
+`#> 6        2 glm   max_sorensen      0.299         210        210    0.908 0.0311 `\
+`#> 7        3 raf   max_sens_spec     0.592         210        210    0.857 0.0515 `\
+`#> # ℹ 28 more variables: TNR_mean <dbl>, TNR_sd <dbl>, W_TPR_TNR_mean <dbl>,`\
+`#> #   W_TPR_TNR_sd <dbl>, SORENSEN_mean <dbl>, SORENSEN_sd <dbl>,`\
+`#> #   JACCARD_mean <dbl>, JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>,`\
+`#> #   OR_mean <dbl>, OR_sd <dbl>, TSS_mean <dbl>, TSS_sd <dbl>, KAPPA_mean <dbl>,`\
+`#> #   KAPPA_sd <dbl>, MCC_mean <dbl>, MCC_sd <dbl>, AUC_mean <dbl>, AUC_sd <dbl>,`\
+`#> #   BOYCE_mean <dbl>, BOYCE_sd <dbl>, CRPS_mean <dbl>, CRPS_sd <dbl>,`\
+`#> #   IMAE_mean <dbl>, IMAE_sd <dbl>, mtry <dbl>, ntree <dbl>`
 
 ### 3. Raster interpolation between two time periods
 
@@ -586,7 +600,9 @@ raster files in a given directory.
 `abma`` ``<-`` ``terra``::`[`rast`](https://rspatial.github.io/terra/reference/rast.html)`(``f``)`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``abma``)`
 
-![](v03_post_modeling_files/figure-html/interp_data-1.png)
+![plot of chunk interp_data](figures/v03-interp_data-1.png)
+
+plot of chunk interp_data
 
 This function will create an object of interpolated values with n annual
 layers ranging from the initial to final year. The resolution and
@@ -631,7 +647,9 @@ interpolated values of 0.9, 0.8, 0.7…0.1
 `#> max values  :   0.975611,   0.960608,   0.950461,   0.944007,   0.944294,   0.946355, ...`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``int``)`
 
-![](v03_post_modeling_files/figure-html/interp-1.png)
+![plot of chunk interp](figures/v03-interp-1.png)
+
+plot of chunk interp
 
 ### 4. Measure model extrapolation
 
@@ -671,7 +689,9 @@ using the approach proposed by Velazco et al., in prep.
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``sp``)`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ca``, add ``=`` ``T``)`
 
-![](v03_post_modeling_files/figure-html/measure_extrap-1.png)
+![plot of chunk measure_extrap](figures/v03-measure_extrap-1.png)
+
+plot of chunk measure_extrap
 
 The accessible area defines calibration area used to extract the
 environmental conditions
@@ -684,7 +704,9 @@ environmental conditions
 `# Plot environmental conditions of the calibration area`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``somevar_ca``)`
 
-![](v03_post_modeling_files/figure-html/get_env-1.png)
+![plot of chunk get_env](figures/v03-get_env-1.png)
+
+plot of chunk get_env
 
 \
 \
@@ -698,7 +720,9 @@ environmental conditions
 `# Plot the SpatRaster object with the extrapolation values measured in percentage`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``xp``)`
 
-![](v03_post_modeling_files/figure-html/get_env-2.png)
+![plot of chunk get_env](figures/v03-get_env-2.png)
+
+plot of chunk get_env
 
 ### 5. Correction of suitability based on extrapolation
 
@@ -730,7 +754,9 @@ raster layer.
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``a_variable``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``occ`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)` ``dplyr``::`[`select`](https://dplyr.tidyverse.org/reference/select.html)`(``x``, ``y``)``)`
 
-![](v03_post_modeling_files/figure-html/msdm_priori-1.png)
+![plot of chunk msdm_priori](figures/v03-msdm_priori-1.png)
+
+plot of chunk msdm_priori
 
 Next, use different methods according to your data.
 
@@ -746,7 +772,9 @@ Next, use different methods according to your data.
 \
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``m_xy``)`
 
-![](v03_post_modeling_files/figure-html/msdm_xy-1.png)
+![plot of chunk msdm_xy](figures/v03-msdm_xy-1.png)
+
+plot of chunk msdm_xy
 
 \
 \
@@ -774,7 +802,9 @@ Next, use different methods according to your data.
 \
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``m_cml``)`
 
-![](v03_post_modeling_files/figure-html/msdm_cml-1.png)
+![plot of chunk msdm_cml](figures/v03-msdm_cml-1.png)
+
+plot of chunk msdm_cml
 
 \
 \
@@ -861,7 +891,9 @@ Next, let’s predict this model and plot it in a map
 `# Predicting individual models`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``m_pred``[[``1``]``]``)`
 
-![](v03_post_modeling_files/figure-html/msdm_post_predict-1.png)
+![plot of chunk msdm_post_predict](figures/v03-msdm_post_predict-1.png)
+
+plot of chunk msdm_post_predict
 
 Finally, perform correction to avoid models overpredictions.
 
@@ -880,7 +912,9 @@ Finally, perform correction to avoid models overpredictions.
 \
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``m_mcp``)`
 
-![](v03_post_modeling_files/figure-html/msdm_post-1.png)
+![plot of chunk msdm_post](figures/v03-msdm_post-1.png)
+
+plot of chunk msdm_post
 
 \
 \
@@ -899,7 +933,9 @@ Finally, perform correction to avoid models overpredictions.
 \
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``m_bmcp``)`
 
-![](v03_post_modeling_files/figure-html/msdm_post-2.png)
+![plot of chunk msdm_post](figures/v03-msdm_post-2.png)
+
+plot of chunk msdm_post
 
 \
 \
@@ -917,7 +953,9 @@ Finally, perform correction to avoid models overpredictions.
 \
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``m_obr``)`
 
-![](v03_post_modeling_files/figure-html/msdm_post-3.png)
+![plot of chunk msdm_post](figures/v03-msdm_post-3.png)
+
+plot of chunk msdm_post
 
 \
 \
@@ -935,7 +973,9 @@ Finally, perform correction to avoid models overpredictions.
 \
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``m_pres``)`
 
-![](v03_post_modeling_files/figure-html/msdm_post-4.png)
+![plot of chunk msdm_post](figures/v03-msdm_post-4.png)
+
+plot of chunk msdm_post
 
 \
 \
@@ -953,4 +993,6 @@ Finally, perform correction to avoid models overpredictions.
 \
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``m_lq``)`
 
-![](v03_post_modeling_files/figure-html/msdm_post-5.png)
+![plot of chunk msdm_post](figures/v03-msdm_post-5.png)
+
+plot of chunk msdm_post

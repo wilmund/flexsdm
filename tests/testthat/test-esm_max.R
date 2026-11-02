@@ -1,4 +1,5 @@
 test_that("ESM maximum entropy", {
+  skip_on_cran()
   data("abies")
   data("backg")
   require(dplyr)
@@ -51,6 +52,7 @@ test_that("ESM maximum entropy", {
 })
 
 test_that("ESM maximum entropy only with presences and background points", {
+  skip_on_cran()
   data("abies")
   data("backg")
   require(dplyr)

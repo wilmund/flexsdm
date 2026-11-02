@@ -70,9 +70,38 @@
 #' @importFrom stats sd
 #'
 #' @examples
+#' # Toy data: a small subset of 'abies' to keep this example fast
+#' data("abies")
+#' abies_toy <- abies[c(1:30, 701:730), ]
+#' abies_toy <- part_random(
+#'   data = abies_toy,
+#'   pr_ab = "pr_ab",
+#'   method = c(method = "kfold", folds = 3)
+#' )
+#'
+#' # Use the same records as background points (toy example only)
+#' backg_toy <- abies_toy
+#' backg_toy$pr_ab <- 0
+#'
+#' max_toy <- fit_max(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   background = backg_toy,
+#'   thr = "max_sens_spec",
+#'   clamp = TRUE,
+#'   classes = "lq",
+#'   pred_type = "cloglog",
+#'   regmult = 1
+#' )
+#' max_toy$performance
+#'
 #' \donttest{
 #' data("abies")
 #' data("backg")
+#' set.seed(1)
+#' backg <- backg[sample(nrow(backg), 1000), ] # subsample to speed up this example
 #' abies # environmental conditions of presence-absence data
 #' backg # environmental conditions of background points
 #'
@@ -82,14 +111,14 @@
 #' abies2 <- part_random(
 #'   data = abies,
 #'   pr_ab = "pr_ab",
-#'   method = c(method = "kfold", folds = 5)
+#'   method = c(method = "kfold", folds = 3)
 #' )
 #' abies2
 #'
 #' backg2 <- part_random(
 #'   data = backg,
 #'   pr_ab = "pr_ab",
-#'   method = c(method = "kfold", folds = 5)
+#'   method = c(method = "kfold", folds = 3)
 #' )
 #' backg2
 #'
@@ -185,7 +214,6 @@ fit_max <- function(
 
   if (!is.null(background)) {
     if (!all(table(c(names(background), names(data))) == 2)) {
-      print(table(c(names(background), names(data))))
       stop(
         "Column names of database used in 'data' and 'background' arguments do not match"
       )
@@ -445,7 +473,7 @@ fit_max <- function(
 
           eval_partial[[i]] <- dplyr::tibble(model = "max", eval)
 
-          names(eval_partial) <- i
+          names(eval_partial)[i] <- i
         })
       }
 
@@ -505,15 +533,15 @@ fit_max <- function(
         )
     ))
 
-    if (length(mod) < i) {
+    if (is.null(mod)) {
       message("Refit with addsamplestobackground = FALSE")
       sampleback <- FALSE
       try(
         mod <-
           suppressMessages(
             maxnet::maxnet(
-              p = data[, response],
-              data = data[predictors],
+              p = data_2[, response],
+              data = data_2[predictors],
               f = formula1,
               regmult = regmult,
               addsamplestobackground = sampleback

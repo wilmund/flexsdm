@@ -11,6 +11,11 @@
 #' @importFrom terra res plot as.polygons
 #'
 #' @examples
+#' f <- system.file("external/somevar.tif", package = "flexsdm")
+#' r <- terra::rast(f)
+#' r <- terra::aggregate(r$CFP_1, fact = 6) # coarser resolution to keep this example fast
+#' plot_res(r, res_mult = 10)
+#'
 #' \donttest{
 #' f <- system.file("external/somevar.tif", package = "flexsdm")
 #' r <- terra::rast(f)

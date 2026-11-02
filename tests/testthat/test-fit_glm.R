@@ -1,3 +1,5 @@
+skip_on_cran() # slow tests; they run when NOT_CRAN=true
+
 test_that("multiplication works", {
   data("abies")
   abies <- abies %>% dplyr::group_by(pr_ab) %>% dplyr::slice_sample(prop = .2) %>% dplyr::ungroup()
@@ -79,6 +81,7 @@ test_that("multiplication works", {
 
 
 test_that("test glm with NA, no factor variable and using formula", {
+  skip_on_cran()
   data("abies")
   abies <- abies %>% dplyr::group_by(pr_ab) %>% dplyr::slice_sample(prop = .2) %>% dplyr::ungroup()
 
@@ -105,6 +108,7 @@ test_that("test glm with NA, no factor variable and using formula", {
 
 
 test_that("test select_var argument", {
+  skip_on_cran()
   data("abies")
   abies <- abies %>% dplyr::group_by(pr_ab) %>% dplyr::slice_sample(prop = .2) %>% dplyr::ungroup()
 

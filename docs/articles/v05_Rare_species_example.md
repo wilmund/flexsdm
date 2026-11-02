@@ -84,7 +84,9 @@ the online database Calflora.
 `  col ``=`` ``cols`\
 `)`
 
-![](v05_Rare_species_example_files/figure-html/raw%20data-1.png)
+![plot of chunk raw data](figures/v05-raw_data-1.png)
+
+plot of chunk raw data
 
 ### Delimit calibration area
 
@@ -113,7 +115,9 @@ select our pseudo-absence locations.
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ca``, add ``=`` ``TRUE``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``hespero``[``, `[`c`](https://rdrr.io/r/base/c.html)`(``"x"``, ``"y"``)``]``, col ``=`` ``"black"``, pch ``=`` ``16``)`
 
-![](v05_Rare_species_example_files/figure-html/calibration%20area-1.png)
+![plot of chunk calibration area](figures/v05-calibration_area-1.png)
+
+plot of chunk calibration area
 
 ### Create pseudo-absence data
 
@@ -149,7 +153,10 @@ pseudo-absence data that can be used in our SDMs.
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``psa``[``, `[`c`](https://rdrr.io/r/base/c.html)`(``"x"``, ``"y"``)``]``, cex ``=`` ``0.8``, pch ``=`` ``16``, col ``=`` ``"black"``)`` ``# Pseudo-absences`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``hespero``[``, `[`c`](https://rdrr.io/r/base/c.html)`(``"x"``, ``"y"``)``]``, col ``=`` ``"yellow"``, pch ``=`` ``16``, cex ``=`` ``1.5``)`` ``# Presences`
 
-![](v05_Rare_species_example_files/figure-html/pseudo-absence%20data-1.png)
+![plot of chunk pseudo-absence
+data](figures/v05-pseudo-absence_data-1.png)
+
+plot of chunk pseudo-absence data
 
 \
 \
@@ -157,20 +164,20 @@ pseudo-absence data that can be used in our SDMs.
 `# Bind a presences and pseudo-absences`\
 `hespero_pa`` ``<-`` `[`bind_rows`](https://dplyr.tidyverse.org/reference/bind_rows.html)`(``hespero``, ``psa``)`\
 `hespero_pa`` ``# Presence-Pseudo-absence database`\
-`#> ``# A tibble: 42 × 3`\
+`#> # A tibble: 42 × 3`\
 `#>          x        y pr_ab`\
-`#>      ``<dbl>``    ``<dbl>`` ``<dbl>`\
-`#> `` 1`` ``316``923. -``557``843.``     1`\
-`#> `` 2`` ``317``155. -``559``234.``     1`\
-`#> `` 3`` ``316``960. -``558``186.``     1`\
-`#> `` 4`` ``314``347. -``559``648.``     1`\
-`#> `` 5`` ``317``348. -``557``349.``     1`\
-`#> `` 6`` ``316``753. -``559``679.``     1`\
-`#> `` 7`` ``316``777. -``558``644.``     1`\
-`#> `` 8`` ``317``050. -``559``043.``     1`\
-`#> `` 9`` ``316``655. -``559``928.``     1`\
-`#> ``10`` ``316``418. -``567``439.``     1`\
-`#> ``# ℹ 32 more rows`
+`#>      <dbl>    <dbl> <dbl>`\
+`#>  1 316923. -557843.     1`\
+`#>  2 317155. -559234.     1`\
+`#>  3 316960. -558186.     1`\
+`#>  4 314347. -559648.     1`\
+`#>  5 317348. -557349.     1`\
+`#>  6 316753. -559679.     1`\
+`#>  7 316777. -558644.     1`\
+`#>  8 317050. -559043.     1`\
+`#>  9 316655. -559928.     1`\
+`#> 10 316418. -567439.     1`\
+`#> # ℹ 32 more rows`
 
 ### Partition data for evaluating models
 
@@ -439,59 +446,102 @@ our calibration area for making our predictions.
 Now let’s try each of these algorithms with the ESM approach. Note that
 when predicting an ESM, it is possible to only process one at a time.
 
-\
-`eglm`` ``<-`\
-`  `[`esm_glm`](https://sjevelazco.github.io/flexsdm/reference/esm_glm.md)`(`\
-`    data ``=`` ``hespero_pa3``,`\
-`    response ``=`` ``"pr_ab"``,`\
-`    predictors ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"aet"``, ``"cwd"``, ``"tmx"``, ``"tmn"``)``,`\
-`    partition ``=`` ``".part"``,`\
-`    thr ``=`` ``"max_sens_spec"`\
-`  ``)`\
-`#>   |                                                                              |                                                                      |   0%  |                                                                              |============                                                          |  17%  |                                                                              |=======================                                               |  33%  |                                                                              |===================================                                   |  50%  |                                                                              |===============================================                       |  67%  |                                                                              |==========================================================            |  83%  |                                                                              |======================================================================| 100%`\
-\
-`egbm`` ``<-`` `[`esm_gbm`](https://sjevelazco.github.io/flexsdm/reference/esm_gbm.md)`(`\
-`  data ``=`` ``hespero_pa3``,`\
-`  response ``=`` ``"pr_ab"``,`\
-`  predictors ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"aet"``, ``"cwd"``, ``"tmx"``, ``"tmn"``)``,`\
-`  partition ``=`` ``".part"``,`\
-`  thr ``=`` ``"max_sens_spec"`\
-`)`\
-`#>   |                                                                              |                                                                      |   0%  |                                                                              |============                                                          |  17%  |                                                                              |=======================                                               |  33%  |                                                                              |===================================                                   |  50%  |                                                                              |===============================================                       |  67%  |                                                                              |==========================================================            |  83%  |                                                                              |======================================================================| 100%`\
-\
-`esvm`` ``<-`` `[`esm_svm`](https://sjevelazco.github.io/flexsdm/reference/esm_svm.md)`(`\
-`  data ``=`` ``hespero_pa3``,`\
-`  response ``=`` ``"pr_ab"``,`\
-`  predictors ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"aet"``, ``"cwd"``, ``"tmx"``, ``"tmn"``)``,`\
-`  partition ``=`` ``".part"``,`\
-`  thr ``=`` ``"max_sens_spec"`\
-`)`\
-`#>   |                                                                              |                                                                      |   0%  |                                                                              |============                                                          |  17%  |                                                                              |=======================                                               |  33%  |                                                                              |===================================                                   |  50%  |                                                                              |===============================================                       |  67%  |                                                                              |==========================================================            |  83%  |                                                                              |======================================================================| 100%`\
-\
-\
-`eglm_pred`` ``<-`` `[`sdm_predict`](https://sjevelazco.github.io/flexsdm/reference/sdm_predict.md)`(`\
-`  models ``=`` ``eglm``,`\
-`  pred ``=`` ``somevar``,`\
-`  con_thr ``=`` ``TRUE``,`\
-`  predict_area ``=`` ``ca`\
-`)`\
-`#> Predicting ensemble of small models`\
-\
-`egbm_pred`` ``<-`` `[`sdm_predict`](https://sjevelazco.github.io/flexsdm/reference/sdm_predict.md)`(`\
-`  models ``=`` ``egbm``,`\
-`  pred ``=`` ``somevar``,`\
-`  con_thr ``=`` ``TRUE``,`\
-`  predict_area ``=`` ``ca`\
-`)`\
-`#> Predicting ensemble of small models`\
-\
-`esvm_pred`` ``<-`` `[`sdm_predict`](https://sjevelazco.github.io/flexsdm/reference/sdm_predict.md)`(`\
-`  models ``=`` ``esvm``,`\
-`  pred ``=`` ``somevar``,`\
-`  con_thr ``=`` ``TRUE``,`\
-`  predict_area ``=`` ``ca`\
-`)`\
-`#> Predicting ensemble of small models`
+``` r
+eglm <-
+  esm_glm(
+    data = hespero_pa3,
+    response = "pr_ab",
+    predictors = c("aet", "cwd", "tmx", "tmn"),
+    partition = ".part",
+    thr = "max_sens_spec"
+  )
+#> 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |======================================================================| 100%
+
+egbm <- esm_gbm(
+  data = hespero_pa3,
+  response = "pr_ab",
+  predictors = c("aet", "cwd", "tmx", "tmn"),
+  partition = ".part",
+  thr = "max_sens_spec"
+)
+#> 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |======================================================================| 100%
+
+esvm <- esm_svm(
+  data = hespero_pa3,
+  response = "pr_ab",
+  predictors = c("aet", "cwd", "tmx", "tmn"),
+  partition = ".part",
+  thr = "max_sens_spec"
+)
+#> 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |======================================================================| 100%
+
+
+eglm_pred <- sdm_predict(
+  models = eglm,
+  pred = somevar,
+  con_thr = TRUE,
+  predict_area = ca
+)
+#> Predicting ensemble of small models
+
+egbm_pred <- sdm_predict(
+  models = egbm,
+  pred = somevar,
+  con_thr = TRUE,
+  predict_area = ca
+)
+#> Predicting ensemble of small models
+
+esvm_pred <- sdm_predict(
+  models = esvm,
+  pred = somevar,
+  con_thr = TRUE,
+  predict_area = ca
+)
+#> Predicting ensemble of small models
+```
 
 ### Comparing our models
 
@@ -513,7 +563,9 @@ areas with high suitability values that the ESMs.
 `# points(hespero$x, hespero$y, pch = 19)`\
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``esvm_pred``[[``1``]``]``, main ``=`` ``"ESM SVM"``)`
 
-![](v05_Rare_species_example_files/figure-html/comparison%20maps-1.png)
+![plot of chunk comparison maps](figures/v05-comparison_maps-1.png)
+
+plot of chunk comparison maps
 
 \
 `# points(hespero$x, hespero$y, pch = 19)`
@@ -544,11 +596,11 @@ models.
 | model   |      AUC |   TSS |   JACCARD | BOYCE |      IMAE |
 |:--------|---------:|------:|----------:|------:|----------:|
 | glm     | 0.826575 | 0.694 | 0.7539524 |    NA | 0.7484773 |
-| gbm     | 0.865000 | 0.802 | 0.8219524 |    NA | 0.7459401 |
-| svm     | 0.916600 | 0.862 | 0.8756667 |    NA | 0.7214851 |
+| gbm     | 0.865000 | 0.802 | 0.8219524 |    NA | 0.7456810 |
+| svm     | 0.916600 | 0.862 | 0.8756667 |    NA | 0.7214870 |
 | esm_glm | 0.884000 | 0.793 | 0.8219524 |    NA | 0.7058935 |
-| esm_gbm | 0.927725 | 0.846 | 0.8550000 |    NA | 0.7461444 |
-| esm_svm | 0.936300 | 0.876 | 0.8879524 |    NA | 0.7131784 |
+| esm_gbm | 0.927725 | 0.846 | 0.8550000 |    NA | 0.7462015 |
+| esm_svm | 0.936300 | 0.876 | 0.8879524 |    NA | 0.7131791 |
 
 ### Conclusions
 

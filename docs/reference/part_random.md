@@ -77,7 +77,6 @@ groups are defined by the characters 'train' and 'test'.
 ## Examples
 
 ``` r
-# \donttest{
 require(dplyr)
 data("abies")
 abies$partition <- NULL
@@ -185,5 +184,4 @@ abies2$.part1 %>% table() # Note that for this method .partX columns have train 
 #> .
 #>       test      train train-test 
 #>        114        672        306 
-# }
 ```

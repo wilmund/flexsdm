@@ -61,6 +61,26 @@
 #' @importFrom utils combn txtProgressBar setTxtProgressBar
 #'
 #' @examples
+#' # Toy data: a small subset of 'abies' to keep this example fast
+#' data("abies")
+#' abies_toy <- abies[c(1:30, 701:730), ]
+#' abies_toy <- part_random(
+#'   data = abies_toy,
+#'   pr_ab = "pr_ab",
+#'   method = c(method = "kfold", folds = 3)
+#' )
+#'
+#' esm_toy <- esm_svm(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   thr = NULL,
+#'   sigma = 0.1,
+#'   C = 2
+#' )
+#' esm_toy$performance
+#'
 #' \donttest{
 #' data("abies")
 #' require(dplyr)
@@ -301,7 +321,7 @@ esm_svm <- function(
       by = "threshold"
     ) %>%
       dplyr::relocate(model, threshold, thr_value, n_presences, n_absences),
-    performance_part = tibble(model = "esm_gau", eval_esm)
+    performance_part = tibble(model = "esm_svm", eval_esm)
   )
 
   return(result)

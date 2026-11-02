@@ -68,7 +68,7 @@ It calculates the next performance metric:\tabular{lcr}{
    FPB (F-measure on presence-background) \tab yes \tab 0 - 2 \cr
    OR (Omission Rate) \tab yes \tab 0 - 1 \cr
    TSS (True Skill Statistic) \tab yes \tab -1 - 1 \cr
-   KAPPA \tab yes \tab 0 - 1 \cr
+   KAPPA \tab yes \tab -1 - 1 \cr
    MCC (Matthews Correlation Coefficient; Matthews 1975) \tab yes \tab -1 - 1 (1 is best) \cr
    AUC (Area Under Curve) \tab no \tab 0 - 1 \cr
    BOYCE  (continuous Boyce index)* \tab no \tab -1 - 1 \cr
@@ -112,7 +112,6 @@ The formulas are:
 }
 }
 \examples{
-\donttest{
 require(dplyr)
 
 set.seed(0)
@@ -147,7 +146,6 @@ sdm_eval(p, a, thr = c("max_sens_spec"), bg = bg_vals)
 # If background will be used to calculate all other metrics
 # background values can be used in "a" argument
 sdm_eval(p, bg_vals, thr = "max_sens_spec")
-}
 }
 \references{
 \itemize{

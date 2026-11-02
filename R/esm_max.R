@@ -78,6 +78,33 @@
 #' @importFrom utils combn txtProgressBar setTxtProgressBar
 #'
 #' @examples
+#' # Toy data: a small subset of 'abies' to keep this example fast
+#' data("abies")
+#' abies_toy <- abies[c(1:30, 701:730), ]
+#' abies_toy <- part_random(
+#'   data = abies_toy,
+#'   pr_ab = "pr_ab",
+#'   method = c(method = "kfold", folds = 3)
+#' )
+#'
+#' # Use the same records as background points (toy example only)
+#' backg_toy <- abies_toy
+#' backg_toy$pr_ab <- 0
+#'
+#' esm_toy <- esm_max(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   thr = NULL,
+#'   background = backg_toy,
+#'   clamp = TRUE,
+#'   classes = "lq",
+#'   pred_type = "cloglog",
+#'   regmult = 1
+#' )
+#' esm_toy$performance
+#'
 #' \donttest{
 #' data("abies")
 #' data("backg")
@@ -94,7 +121,7 @@
 #' abies2 <- part_random(
 #'   data = abies2,
 #'   pr_ab = "pr_ab",
-#'   method = c(method = "rep_kfold", folds = 5, replicates = 5)
+#'   method = c(method = "rep_kfold", folds = 3, replicates = 2)
 #' )
 #' abies2
 #'
@@ -108,7 +135,7 @@
 #' backg2 <- part_random(
 #'   data = backg2,
 #'   pr_ab = "pr_ab",
-#'   method = c(method = "rep_kfold", folds = 5, replicates = 5)
+#'   method = c(method = "rep_kfold", folds = 3, replicates = 2)
 #' )
 #' backg2
 #'

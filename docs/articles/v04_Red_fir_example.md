@@ -221,7 +221,7 @@ pseudo-absence and background points.
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``bg``[``, `[`c`](https://rdrr.io/r/base/c.html)`(``"x"``, ``"y"``)``]``, col ``=`` ``cl``[``bg``$``.part``]``, cex ``=`` ``0.8``)`` ``# Background points`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``psa``[``, `[`c`](https://rdrr.io/r/base/c.html)`(``"x"``, ``"y"``)``]``, bg ``=`` ``cl``[``psa``$``.part``]``, cex ``=`` ``0.8``, pch ``=`` ``21``)`` ``# Pseudo-absences`
 
-![](v04_Red_fir_example_files/figure-html/pseudo/absence%20and%20background%20data-1.png)
+![](v04_Red_fir_example_files/figure-html/pseudo-absence%20and%20background%20data-1.png)
 
 \
 \

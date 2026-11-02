@@ -140,6 +140,42 @@ and
 ## Examples
 
 ``` r
+# Toy data: a small subset of 'abies' to keep this example fast
+data("abies")
+abies_toy <- abies[c(1:30, 701:730), ]
+abies_toy <- part_random(
+  data = abies_toy,
+  pr_ab = "pr_ab",
+  method = c(method = "kfold", folds = 3)
+)
+
+gam_toy <- fit_gam(
+  data = abies_toy,
+  response = "pr_ab",
+  predictors = c("aet", "cwd", "tmin"),
+  partition = ".part",
+  thr = "max_sens_spec",
+  k = 3
+)
+#> Formula used for model fitting:
+#> pr_ab ~ s(aet, k = 3) + s(cwd, k = 3) + s(tmin, k = 3)
+#> Replica number: 1/1
+#> Partition number: 1/3
+#> Partition number: 2/3
+#> Partition number: 3/3
+gam_toy$performance
+#> # A tibble: 1 × 33
+#>   model threshold     thr_value n_presences n_absences TPR_mean TPR_sd TNR_mean
+#>   <chr> <chr>             <dbl>       <int>      <int>    <dbl>  <dbl>    <dbl>
+#> 1 gam   max_sens_spec     0.403          30         30      0.8  0.173    0.967
+#> # ℹ 25 more variables: TNR_sd <dbl>, W_TPR_TNR_mean <dbl>, W_TPR_TNR_sd <dbl>,
+#> #   SORENSEN_mean <dbl>, SORENSEN_sd <dbl>, JACCARD_mean <dbl>,
+#> #   JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>, OR_mean <dbl>, OR_sd <dbl>,
+#> #   TSS_mean <dbl>, TSS_sd <dbl>, KAPPA_mean <dbl>, KAPPA_sd <dbl>,
+#> #   MCC_mean <dbl>, MCC_sd <dbl>, AUC_mean <dbl>, AUC_sd <dbl>,
+#> #   BOYCE_mean <dbl>, BOYCE_sd <dbl>, CRPS_mean <dbl>, CRPS_sd <dbl>,
+#> #   IMAE_mean <dbl>, IMAE_sd <dbl>
+
 # \donttest{
 require(dplyr)
 data("abies")
@@ -148,7 +184,7 @@ data("abies")
 abies2 <- part_random(
   data = abies,
   pr_ab = "pr_ab",
-  method = c(method = "kfold", folds = 10)
+  method = c(method = "kfold", folds = 3)
 )
 abies2
 #> # A tibble: 1,400 × 14
@@ -179,16 +215,9 @@ gam_t1 <- fit_gam(
 #> Formula used for model fitting:
 #> pr_ab ~ s(aet, k = -1) + s(ppt_jja, k = -1) + s(pH, k = -1) + s(awc, k = -1) + s(depth, k = -1) + landform
 #> Replica number: 1/1
-#> Partition number: 1/10
-#> Partition number: 2/10
-#> Partition number: 3/10
-#> Partition number: 4/10
-#> Partition number: 5/10
-#> Partition number: 6/10
-#> Partition number: 7/10
-#> Partition number: 8/10
-#> Partition number: 9/10
-#> Partition number: 10/10
+#> Partition number: 1/3
+#> Partition number: 2/3
+#> Partition number: 3/3
 gam_t1$model
 #> 
 #> Family: binomial 
@@ -211,7 +240,7 @@ gam_t1$performance
 #> # A tibble: 1 × 33
 #>   model threshold     thr_value n_presences n_absences TPR_mean TPR_sd TNR_mean
 #>   <chr> <chr>             <dbl>       <int>      <int>    <dbl>  <dbl>    <dbl>
-#> 1 gam   max_sens_spec     0.530         700        700    0.753  0.114     0.76
+#> 1 gam   max_sens_spec     0.530         700        700    0.767  0.108    0.730
 #> # ℹ 25 more variables: TNR_sd <dbl>, W_TPR_TNR_mean <dbl>, W_TPR_TNR_sd <dbl>,
 #> #   SORENSEN_mean <dbl>, SORENSEN_sd <dbl>, JACCARD_mean <dbl>,
 #> #   JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>, OR_mean <dbl>, OR_sd <dbl>,
@@ -220,22 +249,15 @@ gam_t1$performance
 #> #   BOYCE_mean <dbl>, BOYCE_sd <dbl>, CRPS_mean <dbl>, CRPS_sd <dbl>,
 #> #   IMAE_mean <dbl>, IMAE_sd <dbl>
 gam_t1$performance_part
-#> # A tibble: 10 × 21
-#>    replica partition model threshold     thr_value n_presences n_absences   TPR
-#>    <chr>   <chr>     <chr> <chr>             <dbl>       <int>      <int> <dbl>
-#>  1 1       1         gam   max_sens_spec     0.507          70         70 0.771
-#>  2 1       2         gam   max_sens_spec     0.702          70         70 0.729
-#>  3 1       3         gam   max_sens_spec     0.584          70         70 0.6  
-#>  4 1       4         gam   max_sens_spec     0.507          70         70 0.814
-#>  5 1       5         gam   max_sens_spec     0.537          70         70 0.729
-#>  6 1       6         gam   max_sens_spec     0.383          70         70 0.943
-#>  7 1       7         gam   max_sens_spec     0.658          70         70 0.557
-#>  8 1       8         gam   max_sens_spec     0.577          70         70 0.757
-#>  9 1       9         gam   max_sens_spec     0.555          70         70 0.757
-#> 10 1       10        gam   max_sens_spec     0.512          70         70 0.871
-#> # ℹ 13 more variables: TNR <dbl>, W_TPR_TNR <dbl>, SORENSEN <dbl>,
-#> #   JACCARD <dbl>, FPB <dbl>, OR <dbl>, TSS <dbl>, KAPPA <dbl>, MCC <dbl>,
-#> #   AUC <dbl>, BOYCE <dbl>, CRPS <dbl>, IMAE <dbl>
+#> # A tibble: 3 × 21
+#>   replica partition model threshold thr_value n_presences n_absences   TPR   TNR
+#>   <chr>   <chr>     <chr> <chr>         <dbl>       <int>      <int> <dbl> <dbl>
+#> 1 1       1         gam   max_sens…     0.619         234        234 0.645 0.799
+#> 2 1       2         gam   max_sens…     0.401         233        233 0.850 0.652
+#> 3 1       3         gam   max_sens…     0.527         233        233 0.807 0.738
+#> # ℹ 12 more variables: W_TPR_TNR <dbl>, SORENSEN <dbl>, JACCARD <dbl>,
+#> #   FPB <dbl>, OR <dbl>, TSS <dbl>, KAPPA <dbl>, MCC <dbl>, AUC <dbl>,
+#> #   BOYCE <dbl>, CRPS <dbl>, IMAE <dbl>
 
 # Specifying the formula explicitly
 require(mgcv)
@@ -262,16 +284,9 @@ gam_t2 <- fit_gam(
 #> Formula used for model fitting:
 #> pr_ab ~ s(aet) + s(ppt_jja) + s(pH) + landform
 #> Replica number: 1/1
-#> Partition number: 1/10
-#> Partition number: 2/10
-#> Partition number: 3/10
-#> Partition number: 4/10
-#> Partition number: 5/10
-#> Partition number: 6/10
-#> Partition number: 7/10
-#> Partition number: 8/10
-#> Partition number: 9/10
-#> Partition number: 10/10
+#> Partition number: 1/3
+#> Partition number: 2/3
+#> Partition number: 3/3
 
 gam_t2$model
 #> 
@@ -294,7 +309,7 @@ gam_t2$performance %>% dplyr::select(ends_with("_mean"))
 #> # A tibble: 1 × 14
 #>   TPR_mean TNR_mean W_TPR_TNR_mean SORENSEN_mean JACCARD_mean FPB_mean OR_mean
 #>      <dbl>    <dbl>          <dbl>         <dbl>        <dbl>    <dbl>   <dbl>
-#> 1    0.783    0.703          0.743         0.750        0.602     1.20   0.217
+#> 1    0.768    0.684          0.726         0.737        0.583     1.17   0.232
 #> # ℹ 7 more variables: TSS_mean <dbl>, KAPPA_mean <dbl>, MCC_mean <dbl>,
 #> #   AUC_mean <dbl>, BOYCE_mean <dbl>, CRPS_mean <dbl>, IMAE_mean <dbl>
 
@@ -302,10 +317,10 @@ gam_t2$performance %>% dplyr::select(ends_with("_mean"))
 abies2 <- part_random(
   data = abies,
   pr_ab = "pr_ab",
-  method = c(method = "rep_kfold", folds = 5, replicates = 5)
+  method = c(method = "rep_kfold", folds = 3, replicates = 2)
 )
 abies2
-#> # A tibble: 1,400 × 18
+#> # A tibble: 1,400 × 15
 #>       id pr_ab        x        y   aet   cwd  tmin ppt_djf ppt_jja    pH    awc
 #>    <int> <dbl>    <dbl>    <dbl> <dbl> <dbl> <dbl>   <dbl>   <dbl> <dbl>  <dbl>
 #>  1   715     0  -95417.  314240.  323.  546.  1.24    62.7   17.8   5.77 0.108 
@@ -319,8 +334,7 @@ abies2
 #>  9  9884     0 -284326.  442136.  377.  446.  3.99   296.    16.8   5.96 0.0900
 #> 10  8651     0  137640. -110538.  215.  265. -4.62   180.     9.57  0    0     
 #> # ℹ 1,390 more rows
-#> # ℹ 7 more variables: depth <dbl>, landform <fct>, .part1 <int>, .part2 <int>,
-#> #   .part3 <int>, .part4 <int>, .part5 <int>
+#> # ℹ 4 more variables: depth <dbl>, landform <fct>, .part1 <int>, .part2 <int>
 
 gam_t3 <- fit_gam(
   data = abies2,
@@ -333,36 +347,14 @@ gam_t3 <- fit_gam(
 )
 #> Formula used for model fitting:
 #> pr_ab ~ s(ppt_jja, k = -1) + s(pH, k = -1) + s(awc, k = -1) + landform
-#> Replica number: 1/5
-#> Partition number: 1/5
-#> Partition number: 2/5
-#> Partition number: 3/5
-#> Partition number: 4/5
-#> Partition number: 5/5
-#> Replica number: 2/5
-#> Partition number: 1/5
-#> Partition number: 2/5
-#> Partition number: 3/5
-#> Partition number: 4/5
-#> Partition number: 5/5
-#> Replica number: 3/5
-#> Partition number: 1/5
-#> Partition number: 2/5
-#> Partition number: 3/5
-#> Partition number: 4/5
-#> Partition number: 5/5
-#> Replica number: 4/5
-#> Partition number: 1/5
-#> Partition number: 2/5
-#> Partition number: 3/5
-#> Partition number: 4/5
-#> Partition number: 5/5
-#> Replica number: 5/5
-#> Partition number: 1/5
-#> Partition number: 2/5
-#> Partition number: 3/5
-#> Partition number: 4/5
-#> Partition number: 5/5
+#> Replica number: 1/2
+#> Partition number: 1/3
+#> Partition number: 2/3
+#> Partition number: 3/3
+#> Replica number: 2/2
+#> Partition number: 1/3
+#> Partition number: 2/3
+#> Partition number: 3/3
 gam_t3
 #> $model
 #> 
@@ -388,7 +380,7 @@ gam_t3
 #> # A tibble: 1 × 33
 #>   model threshold     thr_value n_presences n_absences TPR_mean TPR_sd TNR_mean
 #>   <chr> <chr>             <dbl>       <int>      <int>    <dbl>  <dbl>    <dbl>
-#> 1 gam   max_sens_spec     0.554         700        700    0.750 0.0927    0.721
+#> 1 gam   max_sens_spec     0.554         700        700    0.739 0.0226    0.718
 #> # ℹ 25 more variables: TNR_sd <dbl>, W_TPR_TNR_mean <dbl>, W_TPR_TNR_sd <dbl>,
 #> #   SORENSEN_mean <dbl>, SORENSEN_sd <dbl>, JACCARD_mean <dbl>,
 #> #   JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>, OR_mean <dbl>, OR_sd <dbl>,
@@ -398,39 +390,34 @@ gam_t3
 #> #   IMAE_mean <dbl>, IMAE_sd <dbl>
 #> 
 #> $performance_part
-#> # A tibble: 25 × 21
-#>    replica partition model threshold     thr_value n_presences n_absences   TPR
-#>    <chr>   <chr>     <chr> <chr>             <dbl>       <int>      <int> <dbl>
-#>  1 1       1         gam   max_sens_spec     0.653         140        140 0.586
-#>  2 1       2         gam   max_sens_spec     0.583         140        140 0.657
-#>  3 1       3         gam   max_sens_spec     0.321         140        140 0.957
-#>  4 1       4         gam   max_sens_spec     0.595         140        140 0.721
-#>  5 1       5         gam   max_sens_spec     0.468         140        140 0.779
-#>  6 2       1         gam   max_sens_spec     0.579         140        140 0.743
-#>  7 2       2         gam   max_sens_spec     0.554         140        140 0.679
-#>  8 2       3         gam   max_sens_spec     0.437         140        140 0.857
-#>  9 2       4         gam   max_sens_spec     0.588         140        140 0.664
-#> 10 2       5         gam   max_sens_spec     0.535         140        140 0.779
-#> # ℹ 15 more rows
-#> # ℹ 13 more variables: TNR <dbl>, W_TPR_TNR <dbl>, SORENSEN <dbl>,
-#> #   JACCARD <dbl>, FPB <dbl>, OR <dbl>, TSS <dbl>, KAPPA <dbl>, MCC <dbl>,
-#> #   AUC <dbl>, BOYCE <dbl>, CRPS <dbl>, IMAE <dbl>
+#> # A tibble: 6 × 21
+#>   replica partition model threshold thr_value n_presences n_absences   TPR   TNR
+#>   <chr>   <chr>     <chr> <chr>         <dbl>       <int>      <int> <dbl> <dbl>
+#> 1 1       1         gam   max_sens…     0.516         234        234 0.769 0.671
+#> 2 1       2         gam   max_sens…     0.541         233        233 0.717 0.742
+#> 3 1       3         gam   max_sens…     0.517         233        233 0.747 0.734
+#> 4 2       1         gam   max_sens…     0.562         234        234 0.726 0.739
+#> 5 2       2         gam   max_sens…     0.520         233        233 0.760 0.665
+#> 6 2       3         gam   max_sens…     0.543         233        233 0.717 0.755
+#> # ℹ 12 more variables: W_TPR_TNR <dbl>, SORENSEN <dbl>, JACCARD <dbl>,
+#> #   FPB <dbl>, OR <dbl>, TSS <dbl>, KAPPA <dbl>, MCC <dbl>, AUC <dbl>,
+#> #   BOYCE <dbl>, CRPS <dbl>, IMAE <dbl>
 #> 
 #> $data_ens
-#> # A tibble: 6,996 × 5
-#>    rnames replicates part  pr_ab     pred
-#>    <chr>  <chr>      <chr> <dbl>    <dbl>
-#>  1 7      .part1     1         0 0.000597
-#>  2 10     .part1     1         0 0.511   
-#>  3 13     .part1     1         0 0.0585  
-#>  4 15     .part1     1         0 0.585   
-#>  5 22     .part1     1         0 0.130   
-#>  6 33     .part1     1         0 0.0784  
-#>  7 35     .part1     1         0 0.493   
-#>  8 39     .part1     1         0 0.750   
-#>  9 43     .part1     1         0 0.795   
-#> 10 44     .part1     1         0 0.705   
-#> # ℹ 6,986 more rows
+#> # A tibble: 2,800 × 5
+#>    rnames replicates part  pr_ab      pred
+#>    <chr>  <chr>      <chr> <dbl>     <dbl>
+#>  1 3      .part1     1         0 0.160    
+#>  2 6      .part1     1         0 0.367    
+#>  3 8      .part1     1         0 0.382    
+#>  4 9      .part1     1         0 0.432    
+#>  5 12     .part1     1         0 0.172    
+#>  6 14     .part1     1         0 0.161    
+#>  7 15     .part1     1         0 0.557    
+#>  8 16     .part1     1         0 0.0000751
+#>  9 19     .part1     1         0 0.494    
+#> 10 22     .part1     1         0 0.144    
+#> # ℹ 2,790 more rows
 #> 
 # }
 ```

@@ -71,7 +71,7 @@ of *flexsdm* from [github](https://github.com/sjevelazco/flexsdm) with:
 `#> `\
 `#>     intersect, setdiff, setequal, union`\
 [`library`](https://rdrr.io/r/base/library.html)`(`[`terra`](https://rspatial.org/)`)`\
-`#> terra 1.9.46`\
+`#> terra 1.9.34`\
 `#> `\
 `#> Attaching package: 'terra'`\
 `#> The following object is masked from 'package:knitr':`\
@@ -120,20 +120,20 @@ environment by using the code below:
 [`data`](https://rdrr.io/r/utils/data.html)`(``"spp"``)`\
 \
 `spp`\
-`#> ``# A tibble: 1,150 × 4`\
+`#> # A tibble: 1,150 × 4`\
 `#>    species        x        y pr_ab`\
-`#>    ``<chr>``      ``<dbl>``    ``<dbl>`` ``<dbl>`\
-`#> `` 1`` sp1       -``5``541.`` -``145``138.``     0`\
-`#> `` 2`` sp1      -``51``981.``   ``16``322.     0`\
-`#> `` 3`` sp1     -``269``871.``   ``69``512.     1`\
-`#> `` 4`` sp1      -``96``261.``  -``32``008.``     0`\
-`#> `` 5`` sp1      ``269``589. -``566``338.``     0`\
-`#> `` 6`` sp1       ``29``829. -``328``468.``     0`\
-`#> `` 7`` sp1     -``152``691.``  ``393``782.     0`\
-`#> `` 8`` sp1     -``195``081.``  ``253``652.     0`\
-`#> `` 9`` sp1        -``951.`` -``277``978.``     0`\
-`#> ``10`` sp1      ``145``929. -``271``498.``     0`\
-`#> ``# ℹ 1,140 more rows`
+`#>    <chr>      <dbl>    <dbl> <dbl>`\
+`#>  1 sp1       -5541. -145138.     0`\
+`#>  2 sp1      -51981.   16322.     0`\
+`#>  3 sp1     -269871.   69512.     1`\
+`#>  4 sp1      -96261.  -32008.     0`\
+`#>  5 sp1      269589. -566338.     0`\
+`#>  6 sp1       29829. -328468.     0`\
+`#>  7 sp1     -152691.  393782.     0`\
+`#>  8 sp1     -195081.  253652.     0`\
+`#>  9 sp1        -951. -277978.     0`\
+`#> 10 sp1      145929. -271498.     0`\
+`#> # ℹ 1,140 more rows`
 
 ## Geographic region
 
@@ -151,7 +151,9 @@ How are the points distributed across our study area?
 [`try`](https://rdrr.io/r/base/try.html)`(`[`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``regions``)``, silent ``=`` ``TRUE``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``spp``[``, ``2``:``3``]``, pch ``=`` ``19``, cex ``=`` ``0.5``, col ``=`` `[`as.factor`](https://rspatial.github.io/terra/reference/is.bool.html)`(``spp``$``species``)``)`
 
-![](v01_pre_modeling_files/figure-html/map-1.png)
+![plot of chunk map](figures/v01-map-1.png)
+
+plot of chunk map
 
 ## Calibration area
 
@@ -200,7 +202,9 @@ longitude/latitude, or in map units in other cases.
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ca_1``, add ``=`` ``TRUE``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``spp1``[``, ``2``:``3``]``, pch ``=`` ``19``, cex ``=`` ``0.5``)`
 
-![](v01_pre_modeling_files/figure-html/buffer%20method-1.png)
+![plot of chunk buffer method](figures/v01-buffer_method-1.png)
+
+plot of chunk buffer method
 
 ### 2. Minimum convex polygon
 
@@ -219,7 +223,9 @@ The minimum convex polygon (mcp) method produces a much simpler shape.
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ca_2``, add ``=`` ``TRUE``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``spp1``[``, ``2``:``3``]``, pch ``=`` ``19``, cex ``=`` ``0.5``)`
 
-![](v01_pre_modeling_files/figure-html/mcp%20method-1.png)
+![plot of chunk mcp method](figures/v01-mcp_method-1.png)
+
+plot of chunk mcp method
 
 ### 3. Buffered minimum convex polygon
 
@@ -238,7 +244,9 @@ You can also create a buffer around the minimum convex polygon.
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ca_3``, add ``=`` ``TRUE``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``spp1``[``, ``2``:``3``]``, pch ``=`` ``19``, cex ``=`` ``0.5``)`
 
-![](v01_pre_modeling_files/figure-html/bmcp%20method-1.png)
+![plot of chunk bmcp method](figures/v01-bmcp_method-1.png)
+
+plot of chunk bmcp method
 
 ### 4. Mask
 
@@ -268,7 +276,9 @@ area) are on the right.
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ca_4``, main ``=`` ``"Polygons with points (mask)"``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``spp1``[``, ``2``:``3``]``, pch ``=`` ``19``, cex ``=`` ``0.5``)`
 
-![](v01_pre_modeling_files/figure-html/mask%20method-1.png)
+![plot of chunk mask method](figures/v01-mask_method-1.png)
+
+plot of chunk mask method
 
 ## Reducing collinearity among the predictors
 
@@ -292,7 +302,9 @@ temperature of the coldest month (CFP_4).
 \
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``somevar``)`
 
-![](v01_pre_modeling_files/figure-html/env%20data-1.png)
+![plot of chunk env data](figures/v01-env_data-1.png)
+
+plot of chunk env data
 
 The relationship between different environmental variables can be
 visualized with the pairs() function from the *terra* package. Several
@@ -301,7 +313,9 @@ of our variables are highly correlated (.89 for predictors tmx and tmn).
 \
 `terra``::`[`pairs`](https://rspatial.github.io/terra/reference/pairs.html)`(``somevar``)`
 
-![](v01_pre_modeling_files/figure-html/pairs%20plot-1.png)
+![plot of chunk pairs plot](figures/v01-pairs_plot-1.png)
+
+plot of chunk pairs plot
 
 So how can we correct for or reduce this collinearity? The function
 correct_colinvar() has four methods to deal with collinearity: pearson,
@@ -395,13 +409,13 @@ variables.
 `vif_var``$``removed_variables`\
 `#> NULL`\
 `vif_var``$``vif_table`\
-`#> ``# A tibble: 4 × 2`\
+`#> # A tibble: 4 × 2`\
 `#>   Variables   VIF`\
-`#>   ``<chr>``     ``<dbl>`\
-`#> ``1`` aet        7.62`\
-`#> ``2`` cwd        3.29`\
-`#> ``3`` tmx        3.95`\
-`#> ``4`` tmn        2.89`
+`#>   <chr>     <dbl>`\
+`#> 1 aet        7.62`\
+`#> 2 cwd        3.29`\
+`#> 3 tmx        3.95`\
+`#> 4 tmn        2.89`
 
 ### 3. Principal component analysis
 
@@ -425,21 +439,21 @@ variance explained in selected principal components.
 `#> min values  : -8.453273, -4.260147, -1.525085`\
 `#> max values  :  2.827164,  3.337545,  4.342864`\
 `pca_var``$``coefficients`\
-`#> ``# A tibble: 4 × 5`\
+`#> # A tibble: 4 × 5`\
 `#>   variable    PC1     PC2    PC3     PC4`\
-`#>   ``<chr>``     ``<dbl>``   ``<dbl>``  ``<dbl>``   ``<dbl>`\
-`#> ``1`` aet       0.550 -``0.072``2``  0.296 -``0.778`` `\
-`#> ``2`` cwd       0.450 -``0.777``   0.103  0.429 `\
-`#> ``3`` tmx      -``0.485`` -``0.594``  -``0.450`` -``0.459`` `\
-`#> ``4`` tmn      -``0.511`` -``0.198``   0.836 -``0.024``1`\
+`#>   <chr>     <dbl>   <dbl>  <dbl>   <dbl>`\
+`#> 1 aet       0.550 -0.0722  0.296 -0.778 `\
+`#> 2 cwd       0.450 -0.777   0.103  0.429 `\
+`#> 3 tmx      -0.485 -0.594  -0.450 -0.459 `\
+`#> 4 tmn      -0.511 -0.198   0.836 -0.0241`\
 `pca_var``$``cumulative_variance`\
-`#> ``# A tibble: 4 × 2`\
+`#> # A tibble: 4 × 2`\
 `#>      PC  cvar`\
-`#>   ``<int>`` ``<dbl>`\
-`#> ``1``     1 0.764`\
-`#> ``2``     2 0.915`\
-`#> ``3``     3 0.979`\
-`#> ``4``     4 1`
+`#>   <int> <dbl>`\
+`#> 1     1 0.764`\
+`#> 2     2 0.915`\
+`#> 3     3 0.979`\
+`#> 4     4 1`
 
 ### 4. Factorial analysis
 
@@ -546,7 +560,10 @@ retained.
 `somevar``[[``1``]``]`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)` `[`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``main ``=`` ``"Filtering with 12 bins"``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``filt_env12`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)` `[`select`](https://dplyr.tidyverse.org/reference/select.html)`(``x``, ``y``)``)`
 
-![](v01_pre_modeling_files/figure-html/env%20occurrence%20filtering-1.png)
+![plot of chunk env occurrence
+filtering](figures/v01-env_occurrence_filtering-1.png)
+
+plot of chunk env occurrence filtering
 
 ### Geographical filtering
 
@@ -614,7 +631,10 @@ allows users to manually determine the distance threshold.
 `somevar``[[``1``]``]`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)` `[`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``main ``=`` ``"Filtering with defined distance (30km)"``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``filt_geo3`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)` `[`select`](https://dplyr.tidyverse.org/reference/select.html)`(``x``, ``y``)``)`
 
-![](v01_pre_modeling_files/figure-html/geo%20occurrence%20filtering-1.png)
+![plot of chunk geo occurrence
+filtering](figures/v01-geo_occurrence_filtering-1.png)
+
+plot of chunk geo occurrence filtering
 
 Also, for the three methods, it is possible methods use several values,
 turning easier the possibility to explore or test several filtering
@@ -661,7 +681,10 @@ values.
 `  `[`geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html)`(``)`` ``+`\
 `  `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~``moran``)`
 
-![](v01_pre_modeling_files/figure-html/geo%20occurrence%20filtering%20with%20different%20values-1.png)
+![plot of chunk geo occurrence filtering with different
+values](figures/v01-geo_occurrence_filtering_with_different_values-1.png)
+
+plot of chunk geo occurrence filtering with different values
 
 \
 \
@@ -672,7 +695,10 @@ values.
 `  `[`geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html)`(``)`` ``+`\
 `  `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~``cellsize``)`
 
-![](v01_pre_modeling_files/figure-html/geo%20occurrence%20filtering%20with%20different%20values-2.png)
+![plot of chunk geo occurrence filtering with different
+values](figures/v01-geo_occurrence_filtering_with_different_values-2.png)
+
+plot of chunk geo occurrence filtering with different values
 
 \
 \
@@ -682,7 +708,10 @@ values.
 `  `[`geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html)`(``)`` ``+`\
 `  `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~``determined``)`
 
-![](v01_pre_modeling_files/figure-html/geo%20occurrence%20filtering%20with%20different%20values-3.png)
+![plot of chunk geo occurrence filtering with different
+values](figures/v01-geo_occurrence_filtering_with_different_values-3.png)
+
+plot of chunk geo occurrence filtering with different values
 
 When tested filtering occurrence with different values, you can use the
 [`occfilt_select()`](https://sjevelazco.github.io/flexsdm/reference/occfilt_select.md)
@@ -702,20 +731,20 @@ function help)
 `#> Dataset with filtered value 8 was selected`\
 `filt_selected`\
 `#> $occ`\
-`#> ``# A tibble: 156 × 4`\
+`#> # A tibble: 156 × 4`\
 `#>    species        x        y   idd`\
-`#>    ``<chr>``      ``<dbl>``    ``<dbl>`` ``<int>`\
-`#> `` 1`` sp1     -``269``871.``   ``69``512.     1`\
-`#> `` 2`` sp1     -``149``991.``  ``267``962.     2`\
-`#> `` 3`` sp1       ``91``659. -``156``748.``     4`\
-`#> `` 4`` sp1     -``210``471.``  ``326``282.     5`\
-`#> `` 5`` sp1     -``140``541.``  ``284``972.     6`\
-`#> `` 6`` sp1     -``217``491.``   ``65``732.     7`\
-`#> `` 7`` sp1      -``92``481.``  ``155``642.    12`\
-`#> `` 8`` sp1     -``367``611.``  ``266``072.    13`\
-`#> `` 9`` sp1     -``184``551.``  ``425``372.    15`\
-`#> ``10`` sp1     -``260``151.``   ``57``632.    18`\
-`#> ``# ℹ 146 more rows`\
+`#>    <chr>      <dbl>    <dbl> <int>`\
+`#>  1 sp1     -269871.   69512.     1`\
+`#>  2 sp1     -149991.  267962.     2`\
+`#>  3 sp1       91659. -156748.     4`\
+`#>  4 sp1     -210471.  326282.     5`\
+`#>  5 sp1     -140541.  284972.     6`\
+`#>  6 sp1     -217491.   65732.     7`\
+`#>  7 sp1      -92481.  155642.    12`\
+`#>  8 sp1     -367611.  266072.    13`\
+`#>  9 sp1     -184551.  425372.    15`\
+`#> 10 sp1     -260151.   57632.    18`\
+`#> # ℹ 146 more rows`\
 `#> `\
 `#> $filter_prop`\
 `#>   filt_value mean_autocorr n_records       aet      cwd       tmx       tmn`\
@@ -798,7 +827,10 @@ showing the selected grid.
 `  pch ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``1``, ``19``)``[``sp_part2``$``part``$``pr_ab`` ``+`` ``1``]`\
 `)`
 
-![](v01_pre_modeling_files/figure-html/plot%20spatial%20band%20partition-1.png)
+![plot of chunk plot spatial band
+partition](figures/v01-plot_spatial_band_partition-1.png)
+
+plot of chunk plot spatial band partition
 
 ### 3. Spatial block cross-validation (part_sblock)
 
@@ -835,7 +867,10 @@ testing.
 `  pch ``=`` ``19`\
 `)`
 
-![](v01_pre_modeling_files/figure-html/spatial%20block%20partition-1.png)
+![plot of chunk spatial block
+partition](figures/v01-spatial_block_partition-1.png)
+
+plot of chunk spatial block partition
 
 However, we notice that the grid partition produced by part_sblock has a
 different resolution than the original environmental variables. If you
@@ -862,7 +897,10 @@ we will explore in the next section.
 `  pch ``=`` ``19`\
 `)`
 
-![](v01_pre_modeling_files/figure-html/get%20block%20function-1.png)
+![plot of chunk get block
+function](figures/v01-get_block_function-1.png)
+
+plot of chunk get block function
 
 ### 4. Environmental and spatial cross-validation (part_senv)
 
@@ -898,7 +936,10 @@ and spatial factors.
 `  pch ``=`` ``19`\
 `)`
 
-![](v01_pre_modeling_files/figure-html/environmental%20and%20spatial%20cross-validation-1.png)
+![plot of chunk environmental and spatial
+cross-validation](figures/v01-environmental_and_spatial_cross-validation-1.png)
+
+plot of chunk environmental and spatial cross-validation
 
 ## Background and pseudo-absence sampling
 
@@ -952,7 +993,9 @@ section on “Calibration area”).
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ca_1``, add ``=`` ``TRUE``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``bg``, cex ``=`` ``.1``, pch ``=`` ``19``, col ``=`` ``"gray"``)`
 
-![](v01_pre_modeling_files/figure-html/sample%20background-1.png)
+![plot of chunk sample background](figures/v01-sample_background-1.png)
+
+plot of chunk sample background
 
 ### 2. Sample pseudo-absences
 
@@ -1000,7 +1043,10 @@ goals.
 [`plot`](https://rspatial.github.io/terra/reference/plot.html)`(``ca_1``, add ``=`` ``TRUE``)`\
 [`points`](https://rspatial.github.io/terra/reference/lines.html)`(``psa``, cex ``=`` ``.7``, pch ``=`` ``19``, col ``=`` ``"gray"``)`
 
-![](v01_pre_modeling_files/figure-html/sample%20pseudo-absences-1.png)
+![plot of chunk sample
+pseudo-absences](figures/v01-sample_pseudo-absences-1.png)
+
+plot of chunk sample pseudo-absences
 
 ## Extracting environmental values
 

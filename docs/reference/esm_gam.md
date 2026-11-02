@@ -129,6 +129,51 @@ and
 ## Examples
 
 ``` r
+# Toy data: a small subset of 'abies' to keep this example fast
+data("abies")
+abies_toy <- abies[c(1:30, 701:730), ]
+abies_toy <- part_random(
+  data = abies_toy,
+  pr_ab = "pr_ab",
+  method = c(method = "kfold", folds = 3)
+)
+
+esm_toy <- esm_gam(
+  data = abies_toy,
+  response = "pr_ab",
+  predictors = c("aet", "cwd", "tmin"),
+  partition = ".part",
+  thr = NULL,
+  k = 3
+)
+#> 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |======================================================================| 100%
+esm_toy$performance
+#> # A tibble: 7 × 33
+#>   model   threshold    thr_value n_presences n_absences TPR_mean TPR_sd TNR_mean
+#>   <chr>   <chr>            <dbl>       <int>      <int>    <dbl>  <dbl>    <dbl>
+#> 1 esm_gam equal_sens_…     0.558          30         30    0.867 0.0577    0.867
+#> 2 esm_gam lpt              0.396          30         30    1     0         0.8  
+#> 3 esm_gam max_fpb          0.396          30         30    1     0         0.8  
+#> 4 esm_gam max_jaccard      0.396          30         30    1     0         0.8  
+#> 5 esm_gam max_sens_sp…     0.460          30         30    0.9   0.1       0.9  
+#> 6 esm_gam max_sorensen     0.396          30         30    1     0         0.8  
+#> 7 esm_gam sensitivity      0.467          30         30    0.9   0         0.867
+#> # ℹ 25 more variables: TNR_sd <dbl>, W_TPR_TNR_mean <dbl>, W_TPR_TNR_sd <dbl>,
+#> #   SORENSEN_mean <dbl>, SORENSEN_sd <dbl>, JACCARD_mean <dbl>,
+#> #   JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>, OR_mean <dbl>, OR_sd <dbl>,
+#> #   TSS_mean <dbl>, TSS_sd <dbl>, KAPPA_mean <dbl>, KAPPA_sd <dbl>,
+#> #   MCC_mean <dbl>, MCC_sd <dbl>, AUC_mean <dbl>, AUC_sd <dbl>,
+#> #   BOYCE_mean <dbl>, BOYCE_sd <dbl>, CRPS_mean <dbl>, CRPS_sd <dbl>,
+#> #   IMAE_mean <dbl>, IMAE_sd <dbl>
+
 # \donttest{
 data("abies")
 require(dplyr)
@@ -537,10 +582,10 @@ set.seed(10)
 abies2 <- part_random(
   data = abies2,
   pr_ab = "pr_ab",
-  method = c(method = "rep_kfold", folds = 3, replicates = 5)
+  method = c(method = "rep_kfold", folds = 3, replicates = 2)
 )
 abies2
-#> # A tibble: 20 × 18
+#> # A tibble: 20 × 15
 #>       id pr_ab        x        y   aet   cwd   tmin ppt_djf ppt_jja    pH    awc
 #>    <int> <dbl>    <dbl>    <dbl> <dbl> <dbl>  <dbl>   <dbl>   <dbl> <dbl>  <dbl>
 #>  1 12040     0 -308909.  384248.  573.  332.  4.84     521.   48.8   5.63 0.108 
@@ -563,8 +608,7 @@ abies2
 #> 18  4441     1   49405.  -60502.  362.  582.  2.42     218.    7.84  5.64 0.0786
 #> 19   301     1 -132516.  270845.  367.  196. -2.56     422.   26.3   6.70 0.0300
 #> 20  3162     1   59905.  -53634.  319.  626.  1.99     212.    4.50  4.51 0.0396
-#> # ℹ 7 more variables: depth <dbl>, landform <fct>, .part1 <int>, .part2 <int>,
-#> #   .part3 <int>, .part4 <int>, .part5 <int>
+#> # ℹ 4 more variables: depth <dbl>, landform <fct>, .part1 <int>, .part2 <int>
 
 esm_gam_t2 <- esm_gam(
   data = abies2,
@@ -633,7 +677,7 @@ esm_gam_t2 <- esm_gam(
   |                                                                            
   |======================================================================| 100%
 esm_gam_t2$esm_model # bivariate model
-#> $`0.240740740740741`
+#> $`0.236111111111111`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -659,7 +703,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.184259259259259`
+#> $`0.268518518518519`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -672,7 +716,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.4765413     
 #> 
-#> $`0.146296296296296`
+#> $`0.0833333333333333`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -685,7 +729,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.4818906     
 #> 
-#> $`0.125925925925926`
+#> $`0.273148148148148`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -698,7 +742,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.4948666     
 #> 
-#> $`0.569444444444444`
+#> $`0.546296296296296`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -724,7 +768,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.305555555555556`
+#> $`0.342592592592593`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -737,7 +781,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.4360771     
 #> 
-#> $`0.687037037037037`
+#> $`0.664351851851852`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -750,7 +794,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.107549     
 #> 
-#> $`0.0935185185185186`
+#> $`0.141203703703704`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -763,7 +807,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5582199     
 #> 
-#> $`0.494907407407407`
+#> $`0.392361111111111`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -776,7 +820,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.3416266     
 #> 
-#> $`0.961111111111111`
+#> $`0.944444444444444`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -802,7 +846,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.844444444444445`
+#> $`0.833333333333333`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -815,7 +859,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.977777777777778`
+#> $`0.944444444444444`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -828,7 +872,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.851851851851852`
+#> $`0.888888888888889`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -841,7 +885,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.145833333333333`
+#> $`0.115740740740741`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -854,7 +898,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5455887     
 #> 
-#> $`0.224074074074074`
+#> $`0.0949074074074074`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -867,20 +911,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.619206     
 #> 
-#> $`0.0296296296296297`
-#> 
-#> Family: binomial 
-#> Link function: logit 
-#> 
-#> Formula:
-#> pr_ab ~ s(ppt_djf, k = 2) + s(awc, k = 2)
-#> 
-#> Estimated degrees of freedom:
-#> 1 1  total = 3 
-#> 
-#> UBRE score: 0.5759198     
-#> 
-#> $`0.445833333333333`
+#> $`0.384259259259259`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -893,7 +924,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.2354151     
 #> 
-#> $`0.29537037037037`
+#> $`0.226851851851852`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -906,7 +937,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5402802     
 #> 
-#> $`0.148148148148148`
+#> $`0.115740740740741`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -919,7 +950,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5189453     
 #> 
-#> $`0.534722222222222`
+#> $`0.465277777777778`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -932,20 +963,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.1548222     
 #> 
-#> $`0.1`
-#> 
-#> Family: binomial 
-#> Link function: logit 
-#> 
-#> Formula:
-#> pr_ab ~ s(pH, k = 2) + s(awc, k = 2)
-#> 
-#> Estimated degrees of freedom:
-#> 1 1  total = 3 
-#> 
-#> UBRE score: 0.5776162     
-#> 
-#> $`0.547222222222222`
+#> $`0.527777777777778`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -958,7 +976,7 @@ esm_gam_t2$esm_model # bivariate model
 #> 
 #> UBRE score: 0.1369325     
 #> 
-#> $`0.50462962962963`
+#> $`0.493055555555556`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -980,13 +998,13 @@ esm_gam_t2$performance
 #> # A tibble: 7 × 33
 #>   model   threshold    thr_value n_presences n_absences TPR_mean TPR_sd TNR_mean
 #>   <chr>   <chr>            <dbl>       <int>      <int>    <dbl>  <dbl>    <dbl>
-#> 1 esm_gam equal_sens_…     0.621          10         10    0.983 0.0645    0.983
-#> 2 esm_gam lpt              0.565          10         10    1     0         0.983
-#> 3 esm_gam max_fpb          0.565          10         10    1     0         0.983
-#> 4 esm_gam max_jaccard      0.565          10         10    1     0         0.983
-#> 5 esm_gam max_sens_sp…     0.565          10         10    0.983 0.0645    1    
-#> 6 esm_gam max_sorensen     0.565          10         10    1     0         0.983
-#> 7 esm_gam sensitivity      0.664          10         10    1     0         0.983
+#> 1 esm_gam equal_sens_…     0.656          10         10    0.958  0.102    0.958
+#> 2 esm_gam lpt              0.584          10         10    1      0        0.958
+#> 3 esm_gam max_fpb          0.584          10         10    1      0        0.958
+#> 4 esm_gam max_jaccard      0.584          10         10    1      0        0.958
+#> 5 esm_gam max_sens_sp…     0.656          10         10    0.958  0.102    1    
+#> 6 esm_gam max_sorensen     0.584          10         10    1      0        0.958
+#> 7 esm_gam sensitivity      0.680          10         10    1      0        0.958
 #> # ℹ 25 more variables: TNR_sd <dbl>, W_TPR_TNR_mean <dbl>, W_TPR_TNR_sd <dbl>,
 #> #   SORENSEN_mean <dbl>, SORENSEN_sd <dbl>, JACCARD_mean <dbl>,
 #> #   JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>, OR_mean <dbl>, OR_sd <dbl>,
@@ -1002,10 +1020,10 @@ set.seed(10)
 abies2 <- part_random(
   data = abies2,
   pr_ab = "pr_ab",
-  method = c(method = "boot", replicates = 10, proportion = 0.7)
+  method = c(method = "boot", replicates = 3, proportion = 0.7)
 )
 abies2
-#> # A tibble: 20 × 23
+#> # A tibble: 20 × 16
 #>       id pr_ab        x        y   aet   cwd   tmin ppt_djf ppt_jja    pH    awc
 #>    <int> <dbl>    <dbl>    <dbl> <dbl> <dbl>  <dbl>   <dbl>   <dbl> <dbl>  <dbl>
 #>  1 12040     0 -308909.  384248.  573.  332.  4.84     521.   48.8   5.63 0.108 
@@ -1028,9 +1046,8 @@ abies2
 #> 18  4441     1   49405.  -60502.  362.  582.  2.42     218.    7.84  5.64 0.0786
 #> 19   301     1 -132516.  270845.  367.  196. -2.56     422.   26.3   6.70 0.0300
 #> 20  3162     1   59905.  -53634.  319.  626.  1.99     212.    4.50  4.51 0.0396
-#> # ℹ 12 more variables: depth <dbl>, landform <fct>, .part1 <chr>, .part2 <chr>,
-#> #   .part3 <chr>, .part4 <chr>, .part5 <chr>, .part6 <chr>, .part7 <chr>,
-#> #   .part8 <chr>, .part9 <chr>, .part10 <chr>
+#> # ℹ 5 more variables: depth <dbl>, landform <fct>, .part1 <chr>, .part2 <chr>,
+#> #   .part3 <chr>
 
 esm_gam_t3 <- esm_gam(
   data = abies2,
@@ -1099,7 +1116,7 @@ esm_gam_t3 <- esm_gam(
   |                                                                            
   |======================================================================| 100%
 esm_gam_t3$esm_model # bivariate model
-#> $`0.577777777777778`
+#> $`0.555555555555556`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1125,7 +1142,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.455555555555555`
+#> $`0.703703703703704`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1138,7 +1155,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.4954043     
 #> 
-#> $`0.488888888888889`
+#> $`0.925925925925926`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1151,7 +1168,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.4765413     
 #> 
-#> $`0.6`
+#> $`0.703703703703704`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1164,7 +1181,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.4818906     
 #> 
-#> $`0.533333333333333`
+#> $`0.703703703703704`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1177,7 +1194,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.4948666     
 #> 
-#> $`0.933333333333333`
+#> $`1`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1190,7 +1207,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.08148345     
 #> 
-#> $`0.966666666666667`
+#> $`1`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1203,7 +1220,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.566666666666667`
+#> $`0.185185185185185`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1216,7 +1233,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.4360771     
 #> 
-#> $`0.822222222222222`
+#> $`0.703703703703704`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1229,7 +1246,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.107549     
 #> 
-#> $`0.177777777777778`
+#> $`0.555555555555556`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1242,7 +1259,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5582199     
 #> 
-#> $`0.888888888888889`
+#> $`0.925925925925926`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1255,7 +1272,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.3416266     
 #> 
-#> $`0.955555555555555`
+#> $`1`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1307,7 +1324,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.955555555555555`
+#> $`1`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1320,7 +1337,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: -0.7     
 #> 
-#> $`0.633333333333333`
+#> $`0.703703703703704`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1333,7 +1350,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5455887     
 #> 
-#> $`0.366666666666667`
+#> $`0.037037037037037`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1346,7 +1363,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.619206     
 #> 
-#> $`0.388888888888889`
+#> $`0.481481481481481`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1359,7 +1376,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5759198     
 #> 
-#> $`0.911111111111111`
+#> $`1`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1372,7 +1389,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.2354151     
 #> 
-#> $`0.622222222222222`
+#> $`0.703703703703704`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1385,7 +1402,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5402802     
 #> 
-#> $`0.511111111111111`
+#> $`0.777777777777778`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1398,7 +1415,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5189453     
 #> 
-#> $`0.911111111111111`
+#> $`0.925925925925926`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1411,7 +1428,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.1548222     
 #> 
-#> $`0.144444444444444`
+#> $`0.555555555555556`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1424,7 +1441,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.5776162     
 #> 
-#> $`0.877777777777778`
+#> $`0.925925925925926`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1437,7 +1454,7 @@ esm_gam_t3$esm_model # bivariate model
 #> 
 #> UBRE score: 0.1369325     
 #> 
-#> $`0.9`
+#> $`1`
 #> 
 #> Family: binomial 
 #> Link function: logit 
@@ -1459,13 +1476,13 @@ esm_gam_t3$performance
 #> # A tibble: 7 × 33
 #>   model   threshold    thr_value n_presences n_absences TPR_mean TPR_sd TNR_mean
 #>   <chr>   <chr>            <dbl>       <int>      <int>    <dbl>  <dbl>    <dbl>
-#> 1 esm_gam equal_sens_…     0.500          10         10        1      0        1
-#> 2 esm_gam lpt              0.500          10         10        1      0        1
-#> 3 esm_gam max_fpb          0.500          10         10        1      0        1
-#> 4 esm_gam max_jaccard      0.500          10         10        1      0        1
-#> 5 esm_gam max_sens_sp…     0.500          10         10        1      0        1
-#> 6 esm_gam max_sorensen     0.500          10         10        1      0        1
-#> 7 esm_gam sensitivity      0.647          10         10        1      0        1
+#> 1 esm_gam equal_sens_…     0.686          10         10        1      0        1
+#> 2 esm_gam lpt              0.686          10         10        1      0        1
+#> 3 esm_gam max_fpb          0.686          10         10        1      0        1
+#> 4 esm_gam max_jaccard      0.686          10         10        1      0        1
+#> 5 esm_gam max_sens_sp…     0.686          10         10        1      0        1
+#> 6 esm_gam max_sorensen     0.686          10         10        1      0        1
+#> 7 esm_gam sensitivity      0.686          10         10        1      0        1
 #> # ℹ 25 more variables: TNR_sd <dbl>, W_TPR_TNR_mean <dbl>, W_TPR_TNR_sd <dbl>,
 #> #   SORENSEN_mean <dbl>, SORENSEN_sd <dbl>, JACCARD_mean <dbl>,
 #> #   JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>, OR_mean <dbl>, OR_sd <dbl>,

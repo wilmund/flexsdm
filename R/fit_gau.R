@@ -45,8 +45,28 @@
 #' @importFrom stats sd dist dnorm pnorm qnorm
 #'
 #' @examples
+#' # Toy data: a small subset of 'abies' to keep this example fast
+#' data("abies")
+#' abies_toy <- abies[c(1:30, 701:730), ]
+#' abies_toy <- part_random(
+#'   data = abies_toy,
+#'   pr_ab = "pr_ab",
+#'   method = c(method = "kfold", folds = 3)
+#' )
+#'
+#' gau_toy <- fit_gau(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   thr = "max_sens_spec"
+#' )
+#' gau_toy$performance
+#'
 #' \donttest{
 #' data("abies")
+#' set.seed(1)
+#' abies <- abies[sample(nrow(abies), 400), ] # subsample to speed up this example
 #'
 #' # Using k-fold partition method
 #' abies2 <- part_random(
@@ -80,7 +100,7 @@
 #' abies2 <- part_random(
 #'   data = abies,
 #'   pr_ab = "pr_ab",
-#'   method = c(method = "boot", replicates = 5, proportion = 0.7)
+#'   method = c(method = "boot", replicates = 2, proportion = 0.7)
 #' )
 #' abies2
 #'
@@ -284,7 +304,6 @@ fit_gau <- function(
       for (i in 1:np2) {
         tryCatch({
           message("Partition number: ", i, "/", np2)
-          set.seed(1)
           mod[[i]] <-
             graf(
               y = train[[i]][, response],
@@ -393,7 +412,6 @@ fit_gau <- function(
       dplyr::relocate(rnames)
 
     # Fit final models with best settings
-    set.seed(1)
     suppressMessages(
       mod <-
         graf(

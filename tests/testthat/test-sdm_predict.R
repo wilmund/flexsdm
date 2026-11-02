@@ -1,4 +1,7 @@
+skip_on_cran() # slow tests; they run when NOT_CRAN=true
+
 test_that("test for fit_ function family", {
+  skip_on_cran()
   require(dplyr)
   require(terra)
 
@@ -244,6 +247,7 @@ test_that("test for fit_ function family", {
 
 
 test_that("test for ensemble, mask, and suit. values above threshold", {
+  skip_on_cran()
   # Environmental variables
   somevar <- system.file("external/somevar.tif", package = "flexsdm") %>% terra::rast()
   regions <- system.file("external/regions.tif", package = "flexsdm") %>% terra::rast()
@@ -385,6 +389,7 @@ test_that("test for all threshold", {
 
 
 test_that("test for prdicting ensemble of small models", {
+  skip_on_cran()
   require(dplyr)
   require(terra)
 

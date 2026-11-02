@@ -1,3 +1,5 @@
+skip_on_cran() # slow tests; they run when NOT_CRAN=true
+
 require(terra)
 require(dplyr)
 somevar <-
@@ -41,6 +43,7 @@ test_that("correct_colinvar Pearson", {
 
 
 test_that("correct_colinvar VIF", {
+  skip_on_cran()
   # Perform pearson collinearity control
   CPF_5 <- somevar[[2]]
   names(CPF_5) <- "CPF_5"
@@ -66,6 +69,7 @@ test_that("correct_colinvar VIF", {
 
 
 test_that("correct_colinvar PCA", {
+  skip_on_cran()
   # Perform pearson collinearity control
   var <-
     correct_colinvar(env_layer = somevar, method = "pca")
@@ -88,6 +92,7 @@ test_that("correct_colinvar PCA", {
 })
 
 test_that("correct_colinvar PCA with projections", {
+  skip_on_cran()
   dir_sc <- file.path(tempdir(), "projections")
   dir.create(dir_sc)
   dir_sc <- file.path(dir_sc, c("scenario_1", "scenario_2"))
@@ -111,6 +116,7 @@ test_that("correct_colinvar PCA with projections", {
 
 
 test_that("correct_colinvar PCA with different projection area", {
+  skip_on_cran()
   # set seed
   abies2 <- abies %>%
     dplyr::select(x, y, pr_ab) %>%
@@ -160,6 +166,7 @@ test_that("correct_colinvar PCA with different projection area", {
 })
 
 test_that("correct_colinvar FA", {
+  skip_on_cran()
   somevar <-
     system.file("external/somevar.tif", package = "flexsdm")
   somevar <- terra::rast(somevar)
@@ -185,6 +192,7 @@ test_that("correct_colinvar FA", {
 
 
 test_that("misuse of argument", {
+  skip_on_cran()
   # Perform pearson collinearity control
   expect_error(correct_colinvar(env_layer = somevar, method = c("faasdf")))
   expect_error(correct_colinvar(
@@ -197,6 +205,7 @@ test_that("misuse of argument", {
 })
 
 test_that("based on points", {
+  skip_on_cran()
   data("abies")
   abies2 <- abies %>%
     dplyr::select(x, y, pr_ab)

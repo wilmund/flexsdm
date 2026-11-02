@@ -1,3 +1,5 @@
+skip_on_cran() # slow tests; they run when NOT_CRAN=true
+
 library(terra)
 library(dplyr)
 
@@ -48,6 +50,7 @@ test_that("test data_pdp with factor", {
 })
 
 test_that("test data_pdp", {
+  skip_on_cran()
   df <- data_pdp(
     model = svm_t1$model,
     predictors = c("aet"),
@@ -133,6 +136,7 @@ abies2 <- sdm_extract(abies2,
 
 
 test_that("test pdp with gam", {
+  skip_on_cran()
   m_ <- fit_gam(
     data = abies2, response = "pr_ab", predictors = c("aet", "cwd", "tmx", "tmn"), partition = ".part", thr = c("max_sens_spec")
   )
@@ -162,6 +166,7 @@ test_that("test pdp with gam", {
 })
 
 test_that("test pdp with gau", {
+  skip_on_cran()
   m_ <- fit_gau(
     data = abies2, response = "pr_ab", predictors = c("aet", "cwd", "tmx", "tmn"), partition = ".part", thr = c("max_sens_spec")
   )
@@ -191,6 +196,7 @@ test_that("test pdp with gau", {
 })
 
 test_that("test pdp with gbm", {
+  skip_on_cran()
   m_ <- fit_gbm(
     data = abies2, response = "pr_ab", predictors = c("aet", "cwd", "tmx", "tmn"), partition = ".part", thr = c("max_sens_spec")
   )
@@ -220,6 +226,7 @@ test_that("test pdp with gbm", {
 })
 
 test_that("test pdp with glm", {
+  skip_on_cran()
   m_ <- fit_glm(
     data = abies2, response = "pr_ab", predictors = c("aet", "cwd", "tmx", "tmn"), partition = ".part", thr = c("max_sens_spec")
   )
@@ -249,6 +256,7 @@ test_that("test pdp with glm", {
 })
 
 test_that("test pdp with max", {
+  skip_on_cran()
   m_ <- fit_max(
     data = abies2, response = "pr_ab", predictors = c("aet", "cwd", "tmx", "tmn"), partition = ".part", thr = c("max_sens_spec")
   )
@@ -278,6 +286,7 @@ test_that("test pdp with max", {
 })
 
 test_that("test pdp with net", {
+  skip_on_cran()
   m_ <- fit_net(
     data = abies2, response = "pr_ab", predictors = c("aet", "cwd", "tmx", "tmn"), partition = ".part", thr = c("max_sens_spec")
   )
@@ -316,6 +325,7 @@ test_that("test pdp with net", {
 })
 
 test_that("test pdp with raf", {
+  skip_on_cran()
   m_ <- fit_raf(
     data = abies2, response = "pr_ab", predictors = c("aet", "cwd", "tmx", "tmn"), partition = ".part", thr = c("max_sens_spec")
   )
@@ -345,6 +355,7 @@ test_that("test pdp with raf", {
 })
 
 test_that("test pdp with svm", {
+  skip_on_cran()
   m_ <- fit_svm(
     data = abies2, response = "pr_ab", predictors = c("aet", "cwd", "tmx", "tmn"), partition = ".part", thr = c("max_sens_spec")
   )
@@ -375,6 +386,7 @@ test_that("test pdp with svm", {
 
 
 test_that("test pdp with factors", {
+  skip_on_cran()
   m_ <- fit_svm(
     data = abies2, response = "pr_ab", predictors = c("aet", "cwd", "tmx", "tmn"), partition = ".part", thr = c("max_sens_spec")
   )

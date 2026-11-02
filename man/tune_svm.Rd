@@ -83,6 +83,27 @@ of the hyper-parameters.
 Fit and validate Support Vector Machine models with exploration of hyper-parameters that optimize performance
 }
 \examples{
+# Toy data: a small subset of 'abies' to keep this example fast
+data("abies")
+abies_toy <- abies[c(1:30, 701:730), ]
+abies_toy <- part_random(
+  data = abies_toy,
+  pr_ab = "pr_ab",
+  method = c(method = "kfold", folds = 3)
+)
+
+tune_toy <- tune_svm(
+  data = abies_toy,
+  response = "pr_ab",
+  predictors = c("aet", "cwd", "tmin"),
+  partition = ".part",
+  grid = expand.grid(C = c(2, 8), sigma = c(0.01, 0.1)),
+  thr = "max_sens_spec",
+  metric = "TSS",
+  n_cores = 1
+)
+tune_toy$performance
+
 \donttest{
 data(abies)
 abies
@@ -92,7 +113,7 @@ abies
 abies2 <- part_random(
   data = abies,
   pr_ab = "pr_ab",
-  method = c(method = "kfold", folds = 5)
+  method = c(method = "kfold", folds = 3)
 )
 
 # pr_ab column is species presence and absences (i.e. the response variable)
@@ -101,8 +122,8 @@ abies2 <- part_random(
 # Hyper-parameter values for tuning
 tune_grid <-
   expand.grid(
-    C = c(2, 4, 8, 16, 20),
-    sigma = c(0.01, 0.1, 0.2, 0.3, 0.4)
+    C = c(2, 8),
+    sigma = c(0.01, 0.1, 0.3)
   )
 
 svm_t <-

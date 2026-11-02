@@ -1,3 +1,5 @@
+skip_on_cran() # slow tests; they run when NOT_CRAN=true
+
 test_that("msdm_posteriori", {
   require(dplyr)
   require(terra)
@@ -150,6 +152,7 @@ test_that("msdm_posteriori", {
 # })
 
 test_that("missuse of function", {
+  skip_on_cran()
   require(dplyr)
   require(terra)
 

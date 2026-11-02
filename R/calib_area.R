@@ -25,6 +25,20 @@
 #' @importFrom terra vect buffer aggregate union crs extract is.related
 #'
 #' @examples
+#' data("spp")
+#' sp1 <- spp[spp$species == "sp1" & spp$pr_ab == 1, ]
+#' clusters <- terra::vect(system.file("external/clusters.shp", package = "flexsdm"))
+#'
+#' # Calibration area: buffer of 40 km around the records
+#' ca_toy <- calib_area(
+#'   data = sp1,
+#'   x = "x",
+#'   y = "y",
+#'   method = c("buffer", width = 40000),
+#'   crs = terra::crs(clusters)
+#' )
+#' ca_toy
+#'
 #' \donttest{
 #' require(terra)
 #' require(dplyr)
@@ -206,7 +220,7 @@ calib_area <- function(data, x, y, method, groups = NULL, crs = NULL) {
     })
 
     result <- if (length(result_list) > 1) {
-      do.call(terra::union, result_list)
+      Reduce(terra::union, result_list)
     } else {
       result_list[[1]]
     }

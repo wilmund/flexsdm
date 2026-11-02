@@ -76,6 +76,25 @@ use \code{\link{occfilt_select}} function to automatically select a filtered dat
 number of records and spatial autocorrelation.
 }
 \examples{
+# Toy data: small raster and records of one species to keep this example fast
+data("spp")
+somevar <- terra::rast(system.file("external/somevar.tif", package = "flexsdm"))
+somevar <- terra::aggregate(somevar, fact = 6) # coarser resolution
+sp3 <- spp[spp$species == "sp3", ]
+sp3 <- sp3[sp3$pr_ab == 1, ]
+
+# Geographic filtering based on a coarser resolution (cell size method)
+filtered_occ <- occfilt_geo(
+  data = sp3,
+  x = "x",
+  y = "y",
+  env_layer = somevar,
+  method = c("cellsize", factor = "3"),
+  prj = terra::crs(somevar)
+)
+nrow(sp3)
+nrow(filtered_occ)
+
 \donttest{
 require(terra)
 require(dplyr)
@@ -120,7 +139,7 @@ filtered_occ <- occfilt_geo(
   x = "x",
   y = "y",
   env_layer = somevar,
-  method = c("cellsize", factor = c(1, 4, 8, 12, 16, 20)),
+  method = c("cellsize", factor = c(1, 8, 16)),
   prj = crs(somevar)
 )
 
@@ -159,7 +178,7 @@ filtered_occ <- occfilt_geo(
   x = "x",
   y = "y",
   env_layer = somevar,
-  method = c("defined", factor = c(5, 10, 15, 30, 35, 40)),
+  method = c("defined", factor = c(5, 15, 35)),
   prj = crs(somevar)
 )
 
@@ -194,7 +213,7 @@ filtered_occ <- occfilt_geo(
   x = "x",
   y = "y",
   env_layer = somevar,
-  method = c("moran", c(0.05, 0.15, 0.2, 0.5, 0.7)),
+  method = c("moran", c(0.05, 0.2, 0.5)),
   prj = crs(somevar)
 )
 

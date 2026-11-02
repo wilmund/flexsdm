@@ -56,6 +56,24 @@
 #' @importFrom stats formula sd
 #'
 #' @examples
+#' # Toy data: a small subset of 'abies' to keep this example fast
+#' data("abies")
+#' abies_toy <- abies[c(1:30, 701:730), ]
+#' abies_toy <- part_random(
+#'   data = abies_toy,
+#'   pr_ab = "pr_ab",
+#'   method = c(method = "kfold", folds = 3)
+#' )
+#'
+#' svm_toy <- fit_svm(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   thr = "max_sens_spec"
+#' )
+#' svm_toy$performance
+#'
 #' \donttest{
 #' data("abies")
 #'
@@ -243,7 +261,6 @@ fit_svm <- function(
             kpar_ <- list(sigma = sigma)
           }
 
-          set.seed(1)
           mod[[i]] <-
             suppressMessages(
               kernlab::ksvm(
@@ -279,7 +296,7 @@ fit_svm <- function(
 
           eval_partial[[i]] <- dplyr::tibble(model = "svm", eval)
 
-          names(eval_partial) <- i
+          names(eval_partial)[i] <- i
         })
       }
 
@@ -323,7 +340,6 @@ fit_svm <- function(
     i <- 0
     while (pm > 2) {
       i <- i + 1
-      set.seed(i)
       suppressMessages(
         mod <-
           kernlab::ksvm(

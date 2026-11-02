@@ -69,6 +69,31 @@
 #' @seealso [tune_max], [tune_net], [tune_raf], [tune_svm].
 #'
 #' @examples
+#' # Toy data: a small subset of 'abies' to keep this example fast
+#' data("abies")
+#' abies_toy <- abies[c(1:30, 701:730), ]
+#' abies_toy <- part_random(
+#'   data = abies_toy,
+#'   pr_ab = "pr_ab",
+#'   method = c(method = "kfold", folds = 3)
+#' )
+#'
+#' tune_toy <- tune_gbm(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   grid = expand.grid(
+#'     n.trees = c(20, 40),
+#'     shrinkage = 0.1,
+#'     n.minobsinnode = 3
+#'   ),
+#'   thr = "max_sens_spec",
+#'   metric = "TSS",
+#'   n_cores = 1
+#' )
+#' tune_toy$performance
+#'
 #' \donttest{
 #' data(abies)
 #' abies
@@ -78,7 +103,7 @@
 #' abies2 <- part_random(
 #'   data = abies,
 #'   pr_ab = "pr_ab",
-#'   method = c(method = "kfold", folds = 5)
+#'   method = c(method = "kfold", folds = 3)
 #' )
 #'
 #' # pr_ab is the name of the column with species presence and absences (i.e. the response variable)
@@ -87,9 +112,9 @@
 #' # Hyper-parameter values for tuning
 #' tune_grid <-
 #'   expand.grid(
-#'     n.trees = c(20, 50, 100),
-#'     shrinkage = c(0.1, 0.5, 1),
-#'     n.minobsinnode = c(1, 3, 5, 7, 9)
+#'     n.trees = c(20, 50),
+#'     shrinkage = c(0.1, 0.5),
+#'     n.minobsinnode = c(3, 7)
 #'   )
 #'
 #' gbm_t <-
@@ -236,9 +261,17 @@ tune_gbm <-
       if (n_cores > np2) {
         n_cores <- np2
       }
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cl)
+      if (n_cores > 1) {
+        cl <- parallel::makeCluster(n_cores)
+        doParallel::registerDoParallel(cl)
+      } else {
+        # a single core: run sequentially, without starting a cluster
+        cl <- NULL
+        foreach::registerDoSEQ()
+      }
 
+      # seeds drawn from the caller's RNG so results follow set.seed() set by the user
+      seeds <- sample.int(.Machine$integer.max, np2)
       eval_partial <- foreach::foreach(i = 1:np2, .export = c("sdm_eval"), .packages = c("dplyr")) %dopar% {
         # message("Partition number: ", i, "/", np2)
         mod <- as.list(rep(NA, nrow(grid)))
@@ -252,14 +285,14 @@ tune_gbm <-
 
           # Check if n.minobsinnode is too large for the training data
           nTrain <- nrow(train[[i]])
-          bag.fraction <- 0.5 # gbm default
+          bag.fraction <- 0.9 # same value used in the fits below
           if (nTrain * bag.fraction <= 2 * n_minobsinnode_val + 1) {
             # Adjust n.minobsinnode to be valid
             n_minobsinnode_val <- floor((nTrain * bag.fraction - 1) / 2)
             if (n_minobsinnode_val < 1) n_minobsinnode_val <- 1
           }
 
-          set.seed(1)
+          if (n_cores > 1) set.seed(seeds[i])
           try(mod[[ii]] <-
             suppressMessages(
               gbm::gbm(
@@ -323,7 +356,7 @@ tune_gbm <-
           dplyr::select(-tnames)
         eval
       }
-      parallel::stopCluster(cl)
+      if (!is.null(cl)) parallel::stopCluster(cl)
 
       # Create final database with parameter performance
       names(eval_partial) <- 1:np2

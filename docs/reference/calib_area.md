@@ -68,10 +68,9 @@ A SpatVector
 ## Examples
 
 ``` r
-# \donttest{
 require(terra)
 #> Loading required package: terra
-#> terra 1.9.46
+#> terra 1.9.50
 #> 
 #> Attaching package: ‘terra’
 #> The following objects are masked from ‘package:testthat’:
@@ -181,6 +180,4 @@ ca_3.1 <- calib_area(
 )
 plot(ca_3.1)
 points(single_spp[, 2:3], pch = 19, cex = 0.5, col = "red")
-
-# }
 ```

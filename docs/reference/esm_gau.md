@@ -123,6 +123,50 @@ and
 ## Examples
 
 ``` r
+# Toy data: a small subset of 'abies' to keep this example fast
+data("abies")
+abies_toy <- abies[c(1:30, 701:730), ]
+abies_toy <- part_random(
+  data = abies_toy,
+  pr_ab = "pr_ab",
+  method = c(method = "kfold", folds = 3)
+)
+
+esm_toy <- esm_gau(
+  data = abies_toy,
+  response = "pr_ab",
+  predictors = c("aet", "cwd", "tmin"),
+  partition = ".part",
+  thr = NULL
+)
+#> 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |======================================================================| 100%
+esm_toy$performance
+#> # A tibble: 7 × 33
+#>   model   threshold    thr_value n_presences n_absences TPR_mean TPR_sd TNR_mean
+#>   <chr>   <chr>            <dbl>       <int>      <int>    <dbl>  <dbl>    <dbl>
+#> 1 esm_gau equal_sens_…     0.587          30         30    0.733 0.208     0.733
+#> 2 esm_gau lpt              0.476          30         30    1     0         0.7  
+#> 3 esm_gau max_fpb          0.512          30         30    1     0         0.7  
+#> 4 esm_gau max_jaccard      0.512          30         30    1     0         0.7  
+#> 5 esm_gau max_sens_sp…     0.512          30         30    0.967 0.0577    0.733
+#> 6 esm_gau max_sorensen     0.512          30         30    1     0         0.7  
+#> 7 esm_gau sensitivity      0.516          30         30    0.9   0         0.733
+#> # ℹ 25 more variables: TNR_sd <dbl>, W_TPR_TNR_mean <dbl>, W_TPR_TNR_sd <dbl>,
+#> #   SORENSEN_mean <dbl>, SORENSEN_sd <dbl>, JACCARD_mean <dbl>,
+#> #   JACCARD_sd <dbl>, FPB_mean <dbl>, FPB_sd <dbl>, OR_mean <dbl>, OR_sd <dbl>,
+#> #   TSS_mean <dbl>, TSS_sd <dbl>, KAPPA_mean <dbl>, KAPPA_sd <dbl>,
+#> #   MCC_mean <dbl>, MCC_sd <dbl>, AUC_mean <dbl>, AUC_sd <dbl>,
+#> #   BOYCE_mean <dbl>, BOYCE_sd <dbl>, CRPS_mean <dbl>, CRPS_sd <dbl>,
+#> #   IMAE_mean <dbl>, IMAE_sd <dbl>
+
 # \donttest{
 data("abies")
 require(dplyr)
@@ -491,8 +535,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa23d15a80>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77c7388c8>
 #> 
 #> $facs
 #> named integer(0)
@@ -767,8 +811,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa3012e8c8>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x7759d6238>
 #> 
 #> $facs
 #> named integer(0)
@@ -1043,8 +1087,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa18ef8580>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x7705c7070>
 #> 
 #> $facs
 #> named integer(0)
@@ -1319,8 +1363,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa1e163000>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x7801de900>
 #> 
 #> $facs
 #> named integer(0)
@@ -1595,8 +1639,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa21451ab8>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x7808d1540>
 #> 
 #> $facs
 #> named integer(0)
@@ -1871,8 +1915,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa22b01cb0>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77cdf40b0>
 #> 
 #> $facs
 #> named integer(0)
@@ -2147,8 +2191,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa23c60f58>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77512e388>
 #> 
 #> $facs
 #> named integer(0)
@@ -2423,8 +2467,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa25d8f658>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x76fb84740>
 #> 
 #> $facs
 #> named integer(0)
@@ -2699,8 +2743,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa26c90e08>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77a76caf8>
 #> 
 #> $facs
 #> named integer(0)
@@ -2975,8 +3019,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa266b11f8>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77976f5e8>
 #> 
 #> $facs
 #> named integer(0)
@@ -3251,8 +3295,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa2f826af8>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x76c6770e0>
 #> 
 #> $facs
 #> named integer(0)
@@ -3527,8 +3571,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa313ee3c0>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x778f42e08>
 #> 
 #> $facs
 #> named integer(0)
@@ -3803,8 +3847,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa30369498>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77ad82e08>
 #> 
 #> $facs
 #> named integer(0)
@@ -4079,8 +4123,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa2d0c7c08>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77cce49e0>
 #> 
 #> $facs
 #> named integer(0)
@@ -4355,8 +4399,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa39bbe6d0>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77964c200>
 #> 
 #> $facs
 #> named integer(0)
@@ -4631,8 +4675,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa39dca820>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x778ec3a10>
 #> 
 #> $facs
 #> named integer(0)
@@ -4907,8 +4951,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa32191578>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77aceb3b8>
 #> 
 #> $facs
 #> named integer(0)
@@ -5183,8 +5227,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa2f89ce08>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x768283038>
 #> 
 #> $facs
 #> named integer(0)
@@ -5438,8 +5482,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa2ec11230>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77b968548>
 #> 
 #> $facs
 #> named integer(0)
@@ -5693,8 +5737,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa2e0ce5f0>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x77ff67230>
 #> 
 #> $facs
 #> named integer(0)
@@ -5948,8 +5992,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa2d562d28>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x779193c78>
 #> 
 #> $facs
 #> named integer(0)
@@ -6224,8 +6268,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa2c9a1968>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x771935000>
 #> 
 #> $facs
 #> named integer(0)
@@ -6500,8 +6544,8 @@ esm_gau_t1$esm_model # bivariate model
 #> 
 #> $mnfun
 #> function(x) rep(exp.prev, nrow(x))
-#> <bytecode: 0xa30f57540>
-#> <environment: 0xa31fa5000>
+#> <bytecode: 0x7752f6660>
+#> <environment: 0x76af99d20>
 #> 
 #> $facs
 #> named integer(0)

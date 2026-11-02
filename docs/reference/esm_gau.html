@@ -9,7 +9,7 @@ Ensembles of Small Models (ESM) approach (Breiner et al., 2015, 2018)."><meta na
 
     <a class="navbar-brand me-2" href="../index.html">flexsdm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,7 +130,51 @@ Breiner et al. (2015, 2018).</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Toy data: a small subset of 'abies' to keep this example fast</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"abies"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">abies_toy</span> <span class="op">&lt;-</span> <span class="va">abies</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, <span class="fl">701</span><span class="op">:</span><span class="fl">730</span><span class="op">)</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">abies_toy</span> <span class="op">&lt;-</span> <span class="fu"><a href="part_random.html">part_random</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">abies_toy</span>,</span></span>
+<span class="r-in"><span>  pr_ab <span class="op">=</span> <span class="st">"pr_ab"</span>,</span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"kfold"</span>, folds <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">esm_toy</span> <span class="op">&lt;-</span> <span class="fu">esm_gau</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">abies_toy</span>,</span></span>
+<span class="r-in"><span>  response <span class="op">=</span> <span class="st">"pr_ab"</span>,</span></span>
+<span class="r-in"><span>  predictors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"aet"</span>, <span class="st">"cwd"</span>, <span class="st">"tmin"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  partition <span class="op">=</span> <span class="st">".part"</span>,</span></span>
+<span class="r-in"><span>  thr <span class="op">=</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |======================================================================| 100%</span>
+<span class="r-in"><span><span class="va">esm_toy</span><span class="op">$</span><span class="va">performance</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 33</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   model   threshold    thr_value n_presences n_absences TPR_mean TPR_sd TNR_mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> esm_gau equal_sens_…     0.587          30         30    0.733 0.208     0.733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> esm_gau lpt              0.476          30         30    1     0         0.7  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> esm_gau max_fpb          0.512          30         30    1     0         0.7  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> esm_gau max_jaccard      0.512          30         30    1     0         0.7  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> esm_gau max_sens_sp…     0.512          30         30    0.967 0.057<span style="text-decoration: underline;">7</span>    0.733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> esm_gau max_sorensen     0.512          30         30    1     0         0.7  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> esm_gau sensitivity      0.516          30         30    0.9   0         0.733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 25 more variables: TNR_sd &lt;dbl&gt;, W_TPR_TNR_mean &lt;dbl&gt;, W_TPR_TNR_sd &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   SORENSEN_mean &lt;dbl&gt;, SORENSEN_sd &lt;dbl&gt;, JACCARD_mean &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   JACCARD_sd &lt;dbl&gt;, FPB_mean &lt;dbl&gt;, FPB_sd &lt;dbl&gt;, OR_mean &lt;dbl&gt;, OR_sd &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   TSS_mean &lt;dbl&gt;, TSS_sd &lt;dbl&gt;, KAPPA_mean &lt;dbl&gt;, KAPPA_sd &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   MCC_mean &lt;dbl&gt;, MCC_sd &lt;dbl&gt;, AUC_mean &lt;dbl&gt;, AUC_sd &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   BOYCE_mean &lt;dbl&gt;, BOYCE_sd &lt;dbl&gt;, CRPS_mean &lt;dbl&gt;, CRPS_sd &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   IMAE_mean &lt;dbl&gt;, IMAE_sd &lt;dbl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"abies"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -498,8 +542,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa23d15a80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77c7388c8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -774,8 +818,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa3012e8c8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7759d6238&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -1050,8 +1094,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa18ef8580&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7705c7070&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -1326,8 +1370,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa1e163000&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7801de900&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -1602,8 +1646,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa21451ab8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7808d1540&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -1878,8 +1922,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa22b01cb0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77cdf40b0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -2154,8 +2198,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa23c60f58&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77512e388&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -2430,8 +2474,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa25d8f658&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x76fb84740&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -2706,8 +2750,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa26c90e08&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77a76caf8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -2982,8 +3026,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa266b11f8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77976f5e8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -3258,8 +3302,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa2f826af8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x76c6770e0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -3534,8 +3578,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa313ee3c0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x778f42e08&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -3810,8 +3854,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa30369498&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77ad82e08&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -4086,8 +4130,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa2d0c7c08&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77cce49e0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -4362,8 +4406,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa39bbe6d0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77964c200&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -4638,8 +4682,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa39dca820&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x778ec3a10&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -4914,8 +4958,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa32191578&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77aceb3b8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -5190,8 +5234,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa2f89ce08&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x768283038&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -5445,8 +5489,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa2ec11230&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77b968548&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -5700,8 +5744,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa2e0ce5f0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x77ff67230&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -5955,8 +5999,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa2d562d28&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x779193c78&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -6231,8 +6275,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa2c9a1968&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x771935000&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>
@@ -6507,8 +6551,8 @@ Breiner et al. (2015, 2018).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mnfun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function(x) rep(exp.prev, nrow(x))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0xa30f57540&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0xa31fa5000&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x7752f6660&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x76af99d20&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $facs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named integer(0)</span>

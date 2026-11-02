@@ -217,7 +217,7 @@ study extent.
 `# If you have a polygon for your study extent, you can define like bbox <- st_bbox(study_extent)`\
 \
 `# Download WorldClim bioclimatic variables at 10 arc-minutes resolution (you can adjust the spatial resolution with the res argument)`\
-`env_data`` ``<-`` ``geodata``::``worldclim_global``(``var ``=`` ``"bio"``, res ``=`` ``10``, path ``=`` ``temp_dir``)`` ``# tempdir()`\
+`env_data`` ``<-`` ``geodata``::`[`worldclim_global`](https://rspatial.github.io/geodata/reference/worldclim.html)`(``var ``=`` ``"bio"``, res ``=`` ``10``, path ``=`` ``temp_dir``)`` ``# tempdir()`\
 \
 `# Crop to our area of interest -- retain all variables for now -- we will correct for multicollinearity later`\
 `env_data`` ``<-`` ``terra``::`[`crop`](https://rspatial.github.io/terra/reference/crop.html)`(``env_data``, ``terra``::`[`ext`](https://rspatial.github.io/terra/reference/ext.html)`(``bbox``)``)`\
@@ -287,7 +287,7 @@ geodata::cmip6
 `for`` ``(``i`` ``in`` ``1``:`[`nrow`](https://rspatial.github.io/terra/reference/dimensions.html)`(``scenarios``)``)`` ``{`\
 `  `[`print`](https://rdrr.io/r/base/print.html)`(``scenarios``$``filename``[``i``]``)`\
 \
-`  ``fut`` ``<-`` ``geodata``::``cmip6_world``(`\
+`  ``fut`` ``<-`` ``geodata``::`[`cmip6_world`](https://rspatial.github.io/geodata/reference/cmip6.html)`(`\
 `    model ``=`` ``scenarios``$``model``[``i``]``,`\
 `    ssp ``=`` ``scenarios``$``ssp``[``i``]``,`\
 `    time ``=`` ``scenarios``$``time``[``i``]``,`\
@@ -405,7 +405,7 @@ later.
 `    ``dplyr``::`[`filter`](https://dplyr.tidyverse.org/reference/filter.html)`(``species`` ``==`` ``sp_names``[``i``]``)`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
 `    ``dplyr``::`[`select`](https://dplyr.tidyverse.org/reference/select.html)`(`[`all_of`](https://tidyselect.r-lib.org/reference/all_of.html)`(``var_names``)``)`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
 `    `[`cor`](https://rdrr.io/r/stats/cor.html)`(``use ``=`` ``"pairwise.complete.obs"``, method ``=`` ``"pearson"``)`` `[`%>%`](https://magrittr.tidyverse.org/reference/pipe.html)\
-`    ``reshape2``::``melt``(``)`\
+`    ``reshape2``::`[`melt`](https://rdrr.io/pkg/reshape2/man/melt.html)`(``)`\
 \
 `  ``cor_data`` ``<-`` ``cor_data``[`[`as.numeric`](https://rdrr.io/r/base/numeric.html)`(``cor_data``$``Var1``)`` ``>`` `[`as.numeric`](https://rdrr.io/r/base/numeric.html)`(``cor_data``$``Var2``)``, ``]`\
 \
@@ -858,7 +858,7 @@ will also generate background points for Maxent.
 \
 `  ``# Plot`\
 `  ``p`` ``<-`` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``)`` ``+`\
-`    ``geom_spatvector``(`\
+`    `[`geom_spatvector`](https://dieghernan.github.io/tidyterra/reference/ggspatvector.html)`(`\
 `      data ``=`` ``ca``,`\
 `      fill ``=`` ``NA``,`\
 `      color ``=`` ``"black"``,`\
@@ -883,8 +883,8 @@ will also generate background points for Maxent.
 `      x ``=`` ``"Longitude"``,`\
 `      y ``=`` ``"Latitude"`\
 `    ``)`` ``+`\
-`    ``annotation_scale``(``location ``=`` ``"br"``, width_hint ``=`` ``0.3``)`` ``+`\
-`    ``annotation_north_arrow``(`\
+`    `[`annotation_scale`](https://paleolimbot.github.io/ggspatial/reference/annotation_scale.html)`(``location ``=`` ``"br"``, width_hint ``=`` ``0.3``)`` ``+`\
+`    `[`annotation_north_arrow`](https://paleolimbot.github.io/ggspatial/reference/annotation_north_arrow.html)`(`\
 `      location ``=`` ``"bl"``,`\
 `      style ``=`` ``north_arrow_fancy_orienteering``,`\
 `      height ``=`` `[`unit`](https://rdrr.io/r/grid/unit.html)`(``1.5``, ``"cm"``)``,`\
@@ -1642,16 +1642,16 @@ more memory efficient than loading everything at once.
 \
 `  ``# 3. Plot the continuous habitat suitability maps for this species, with one facet per model.`\
 `  ``p_map_cont`` ``<-`` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``)`` ``+`\
-`    ``tidyterra``::``geom_spatraster``(``data ``=`` ``r_cont``)`` ``+`\
+`    ``tidyterra``::`[`geom_spatraster`](https://dieghernan.github.io/tidyterra/reference/geom_spatraster.html)`(``data ``=`` ``r_cont``)`` ``+`\
 `    `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~``lyr``)`` ``+`\
-`    ``scale_fill_princess_c``(``palette ``=`` ``"america"``)`` ``+`\
+`    `[`scale_fill_princess_c`](https://dieghernan.github.io/tidyterra/reference/scale_princess.html)`(``palette ``=`` ``"america"``)`` ``+`\
 `    `[`theme_bw`](https://ggplot2.tidyverse.org/reference/ggtheme.html)`(``)`\
 \
 `  ``# 4. Plot the semibinary habitat suitability maps for this species, with one facet per model.`\
 `  ``p_map_semibin`` ``<-`` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``)`` ``+`\
-`    ``tidyterra``::``geom_spatraster``(``data ``=`` ``r_semibin``)`` ``+`\
+`    ``tidyterra``::`[`geom_spatraster`](https://dieghernan.github.io/tidyterra/reference/geom_spatraster.html)`(``data ``=`` ``r_semibin``)`` ``+`\
 `    `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~``lyr``)`` ``+`\
-`    ``scale_fill_princess_c``(``palette ``=`` ``"america"``)`` ``+`\
+`    `[`scale_fill_princess_c`](https://dieghernan.github.io/tidyterra/reference/scale_princess.html)`(``palette ``=`` ``"america"``)`` ``+`\
 `    `[`theme_bw`](https://ggplot2.tidyverse.org/reference/ggtheme.html)`(``)`\
 \
 `  ``# 5. Save the generated map as a PNG file in the figures directory, one file per species.`\
@@ -1745,9 +1745,9 @@ more memory efficient than loading everything at once.
 \
 `    ``# Continuous map`\
 `    ``p_cont`` ``<-`` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``)`` ``+`\
-`      ``tidyterra``::``geom_spatraster``(``data ``=`` ``r_cont``)`` ``+`\
+`      ``tidyterra``::`[`geom_spatraster`](https://dieghernan.github.io/tidyterra/reference/geom_spatraster.html)`(``data ``=`` ``r_cont``)`` ``+`\
 `      `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~``lyr``)`` ``+`\
-`      ``scale_fill_princess_c``(``palette ``=`` ``"america"``)`` ``+`\
+`      `[`scale_fill_princess_c`](https://dieghernan.github.io/tidyterra/reference/scale_princess.html)`(``palette ``=`` ``"america"``)`` ``+`\
 `      `[`theme_bw`](https://ggplot2.tidyverse.org/reference/ggtheme.html)`(``)`` ``+`\
 `      `[`ggtitle`](https://ggplot2.tidyverse.org/reference/labs.html)`(`[`paste`](https://rdrr.io/r/base/paste.html)`(``s_name``, ``sc_name``, ``"Continuous"``)``)`\
 \
@@ -1761,9 +1761,9 @@ more memory efficient than loading everything at once.
 \
 `    ``# Semibinary map`\
 `    ``p_semibin`` ``<-`` `[`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html)`(``)`` ``+`\
-`      ``tidyterra``::``geom_spatraster``(``data ``=`` ``r_semibin``)`` ``+`\
+`      ``tidyterra``::`[`geom_spatraster`](https://dieghernan.github.io/tidyterra/reference/geom_spatraster.html)`(``data ``=`` ``r_semibin``)`` ``+`\
 `      `[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)`(``~``lyr``)`` ``+`\
-`      ``scale_fill_princess_c``(``palette ``=`` ``"america"``)`` ``+`\
+`      `[`scale_fill_princess_c`](https://dieghernan.github.io/tidyterra/reference/scale_princess.html)`(``palette ``=`` ``"america"``)`` ``+`\
 `      `[`theme_bw`](https://ggplot2.tidyverse.org/reference/ggtheme.html)`(``)`` ``+`\
 `      `[`ggtitle`](https://ggplot2.tidyverse.org/reference/labs.html)`(`[`paste`](https://rdrr.io/r/base/paste.html)`(``s_name``, ``sc_name``, ``"Semibinary"``)``)`\
 \

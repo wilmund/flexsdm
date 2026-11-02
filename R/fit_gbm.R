@@ -60,6 +60,26 @@
 #' @importFrom stats formula sd
 #'
 #' @examples
+#' # Toy data: a small subset of 'abies' to keep this example fast
+#' data("abies")
+#' abies_toy <- abies[c(1:30, 701:730), ]
+#' abies_toy <- part_random(
+#'   data = abies_toy,
+#'   pr_ab = "pr_ab",
+#'   method = c(method = "kfold", folds = 3)
+#' )
+#'
+#' gbm_toy <- fit_gbm(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   thr = "max_sens_spec",
+#'   n_trees = 20,
+#'   n_minobsinnode = 3
+#' )
+#' gbm_toy$performance
+#'
 #' \donttest{
 #' data("abies")
 #'
@@ -247,7 +267,6 @@ fit_gbm <- function(
         }
         tryCatch({
           message("Partition number: ", i, "/", np2)
-          set.seed(1)
           mod[[i]] <-
             suppressMessages(
               gbm::gbm(
@@ -318,7 +337,6 @@ fit_gbm <- function(
       dplyr::relocate(rnames)
 
     # Fit final models with best settings
-    set.seed(1)
     suppressMessages(
       mod <-
         gbm::gbm(
@@ -327,7 +345,8 @@ fit_gbm <- function(
           distribution = "bernoulli",
           n.trees = n_trees,
           n.minobsinnode = n_minobsinnode,
-          shrinkage = shrinkage
+          shrinkage = shrinkage,
+          bag.fraction = 0.9
         )
     )
 

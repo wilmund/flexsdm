@@ -1,3 +1,5 @@
+skip_on_cran() # slow tests; they run when NOT_CRAN=true
+
 test_that("part_sband lon", {
   require(terra)
   require(dplyr)
@@ -38,6 +40,7 @@ test_that("part_sband lon", {
 })
 
 test_that("part_sband lat", {
+  skip_on_cran()
   require(terra)
   require(dplyr)
 
@@ -71,6 +74,7 @@ test_that("part_sband lat", {
 
 
 test_that("part_sband conditions for not finding a solution", {
+  skip_on_cran()
   require(terra)
   require(dplyr)
 

@@ -1,3 +1,5 @@
+skip_on_cran() # slow tests; they run when NOT_CRAN=true
+
 test_that("test different function setting ", {
   data("abies")
   abies <- abies %>% dplyr::group_by(pr_ab) %>% dplyr::slice_sample(prop = .2) %>% dplyr::ungroup()
@@ -73,6 +75,7 @@ test_that("test different function setting ", {
 
 
 test_that("fit model only with presences and background points", {
+  skip_on_cran()
   data("abies")
   abies <- abies %>% dplyr::group_by(pr_ab) %>% dplyr::slice_sample(prop = .2) %>% dplyr::ungroup()
 
@@ -114,6 +117,7 @@ test_that("fit model only with presences and background points", {
 
 
 test_that("test max with NA, no factor variable and using formula", {
+  skip_on_cran()
   data("abies")
   abies <- abies %>% dplyr::group_by(pr_ab) %>% dplyr::slice_sample(prop = .2) %>% dplyr::ungroup()
 

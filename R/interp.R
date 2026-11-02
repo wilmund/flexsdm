@@ -43,6 +43,19 @@
 #' @export
 #'
 #' @examples
+#' f <- system.file("external/suit_time_step.tif", package = "flexsdm")
+#' abma <- terra::rast(f)
+#'
+#' int <- interp(
+#'   r1 = abma[[1]],
+#'   r2 = abma[[2]],
+#'   y1 = 2010,
+#'   y2 = 2020,
+#'   rastername = "Abies",
+#'   dir_save = NULL
+#' )
+#' int
+#'
 #' \donttest{
 #' require(terra)
 #' require(dplyr)

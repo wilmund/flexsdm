@@ -11,6 +11,34 @@
 #' @importFrom dplyr bind_rows relocate tibble
 #'
 #' @examples
+#' # Toy data: a small subset of 'abies' to keep this example fast
+#' data("abies")
+#' abies_toy <- abies[c(1:30, 701:730), ]
+#' abies_toy <- part_random(
+#'   data = abies_toy,
+#'   pr_ab = "pr_ab",
+#'   method = c(method = "kfold", folds = 3)
+#' )
+#'
+#' glm_toy <- fit_glm(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   thr = "max_sens_spec"
+#' )
+#' gam_toy <- fit_gam(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   thr = "max_sens_spec",
+#'   k = 3
+#' )
+#'
+#' # Merge the performance tables of several models
+#' sdm_summarize(models = list(glm_toy, gam_toy))
+#'
 #' \donttest{
 #' data(abies)
 #' abies
@@ -20,7 +48,7 @@
 #' abies2 <- part_random(
 #'   data = abies,
 #'   pr_ab = "pr_ab",
-#'   method = c(method = "kfold", folds = 5)
+#'   method = c(method = "kfold", folds = 3)
 #' )
 #'
 #' # Build a generalized additive model using fit_gam
@@ -55,8 +83,8 @@
 #'
 #' tune_grid <-
 #'   expand.grid(
-#'     mtry = seq(1, 7, 1),
-#'     ntree = c(300, 500, 700)
+#'     mtry = c(2, 4),
+#'     ntree = c(100, 300)
 #'   )
 #'
 #' rf_t1 <-

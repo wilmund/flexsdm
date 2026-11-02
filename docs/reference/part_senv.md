@@ -161,7 +161,6 @@ and
 ## Examples
 
 ``` r
-# \donttest{
 require(terra)
 require(ggplot2)
 require(dplyr)
@@ -181,7 +180,8 @@ part1 <- part_senv(
   min_n_groups = 2,
   max_n_groups = 10,
   min_occ = 10,
-  prop = 0.2
+  prop = 0.2,
+  include_coords = TRUE
 )
 #> 55 rows were excluded from database because NAs were found
 #> The following grid cell sizes will be tested:
@@ -193,23 +193,23 @@ part1
 #> # A tibble: 945 × 4
 #>           x        y pr_ab .part
 #>       <dbl>    <dbl> <dbl> <int>
-#>  1   -5541. -145138.     0     1
-#>  2  -51981.   16322.     0     2
-#>  3 -269871.   69512.     1     3
-#>  4  -96261.  -32008.     0     2
-#>  5  269589. -566338.     0     1
-#>  6   29829. -328468.     0     1
-#>  7 -152691.  393782.     0     3
+#>  1   -5541. -145138.     0     5
+#>  2  -51981.   16322.     0     1
+#>  3 -269871.   69512.     1     2
+#>  4  -96261.  -32008.     0     1
+#>  5  269589. -566338.     0     5
+#>  6   29829. -328468.     0     5
+#>  7 -152691.  393782.     0     2
 #>  8 -195081.  253652.     0     2
-#>  9    -951. -277978.     0     1
-#> 10  145929. -271498.     0     1
+#>  9    -951. -277978.     0     5
+#> 10  145929. -271498.     0     5
 #> # ℹ 935 more rows
 #> 
 #> $best_part_info
 #> # A tibble: 1 × 6
 #>   n_parition n_groups  sd_p  sd_a spa_auto env_sim
 #>        <int> <chr>    <dbl> <dbl>    <dbl>   <dbl>
-#> 1          3 4         51.0  74.1    0.504       0
+#> 1          4 5         32.7  83.7     0.58    403.
 #> 
 
 ggplot(part1$part, aes(x, y, col = factor(.part))) +
@@ -224,6 +224,4 @@ ggplot(part1$part, aes(x, y, col = factor(.part))) +
 ggplot(part1$part, aes(x, y, col = factor(.part))) +
   geom_point(aes(shape = factor(pr_ab))) +
   facet_wrap(. ~ pr_ab)
-
-# }
 ```

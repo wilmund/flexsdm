@@ -65,6 +65,27 @@
 #'
 #'
 #' @examples
+#' # Toy data: a small subset of 'abies' to keep this example fast
+#' data("abies")
+#' abies_toy <- abies[c(1:30, 701:730), ]
+#' abies_toy <- part_random(
+#'   data = abies_toy,
+#'   pr_ab = "pr_ab",
+#'   method = c(method = "kfold", folds = 3)
+#' )
+#'
+#' tune_toy <- tune_svm(
+#'   data = abies_toy,
+#'   response = "pr_ab",
+#'   predictors = c("aet", "cwd", "tmin"),
+#'   partition = ".part",
+#'   grid = expand.grid(C = c(2, 8), sigma = c(0.01, 0.1)),
+#'   thr = "max_sens_spec",
+#'   metric = "TSS",
+#'   n_cores = 1
+#' )
+#' tune_toy$performance
+#'
 #' \donttest{
 #' data(abies)
 #' abies
@@ -74,7 +95,7 @@
 #' abies2 <- part_random(
 #'   data = abies,
 #'   pr_ab = "pr_ab",
-#'   method = c(method = "kfold", folds = 5)
+#'   method = c(method = "kfold", folds = 3)
 #' )
 #'
 #' # pr_ab column is species presence and absences (i.e. the response variable)
@@ -83,8 +104,8 @@
 #' # Hyper-parameter values for tuning
 #' tune_grid <-
 #'   expand.grid(
-#'     C = c(2, 4, 8, 16, 20),
-#'     sigma = c(0.01, 0.1, 0.2, 0.3, 0.4)
+#'     C = c(2, 8),
+#'     sigma = c(0.01, 0.1, 0.3)
 #'   )
 #'
 #' svm_t <-
@@ -214,15 +235,23 @@ tune_svm <-
       if (n_cores > np2) {
         n_cores <- np2
       }
-      cl <- parallel::makeCluster(n_cores)
-      doParallel::registerDoParallel(cl)
+      if (n_cores > 1) {
+        cl <- parallel::makeCluster(n_cores)
+        doParallel::registerDoParallel(cl)
+      } else {
+        # a single core: run sequentially, without starting a cluster
+        cl <- NULL
+        foreach::registerDoSEQ()
+      }
 
+      # seeds drawn from the caller's RNG so results follow set.seed() set by the user
+      seeds <- sample.int(.Machine$integer.max, np2)
       eval_partial <- foreach::foreach(i = 1:np2, .export = c("sdm_eval"), .packages = c("dplyr")) %dopar% {
         # message("Partition number: ", i, "/", np2)
         mod <- as.list(rep(NA, nrow(grid)))
         names(mod) <- 1:nrow(grid)
         for (ii in 1:nrow(grid)) {
-          set.seed(1)
+          if (n_cores > 1) set.seed(seeds[i])
           try({
             suppressMessages(mod[[ii]] <-
               kernlab::ksvm(
@@ -283,13 +312,13 @@ tune_svm <-
           dplyr::select(-tnames)
         eval
       }
-      parallel::stopCluster(cl)
+      if (!is.null(cl)) parallel::stopCluster(cl)
 
       # Create final database with parameter performance
       names(eval_partial) <- 1:np2
       eval_partial <- eval_partial[sapply(eval_partial, function(x) !is.null(dim(x)))] %>%
         dplyr::bind_rows(., .id = "partition")
-      eval_partial_list[[h]] <- na.omit(eval_partial)
+      eval_partial_list[[h]] <- eval_partial
     }
 
     eval_partial <- eval_partial_list %>%

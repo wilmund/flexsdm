@@ -61,6 +61,23 @@
 #' @importFrom terra mask freq match values ncell xyFromCell
 #'
 #' @examples
+#' # Toy data: small raster and records of one species to keep this example fast
+#' data("spp")
+#' somevar <- terra::rast(system.file("external/somevar.tif", package = "flexsdm"))
+#' somevar <- terra::aggregate(somevar, fact = 6) # coarser resolution
+#' sp3 <- spp[spp$species == "sp3", ]
+#' sp3 <- sp3[sp3$pr_ab == 1, ] # presences only
+#'
+#' bg <- sample_background(
+#'   data = sp3,
+#'   x = "x",
+#'   y = "y",
+#'   n = 100,
+#'   method = "random",
+#'   rlayer = somevar[[1]]
+#' )
+#' bg
+#'
 #' \donttest{
 #' require(terra)
 #' require(dplyr)
@@ -341,8 +358,8 @@ sample_background <-
     # Mask to maksvalue
     if (!is.null(maskval)) {
       if (is.factor(rlayer)) {
-        maskval <-
-          which(levels(rlayer)[[1]][, 2] %in% as.character(maskval))
+        lv <- levels(rlayer)[[1]]
+        maskval <- lv[, 1][lv[, 2] %in% as.character(maskval)]
         rlayer <- rlayer * 1
       }
       filt <- terra::match(rlayer, maskval)

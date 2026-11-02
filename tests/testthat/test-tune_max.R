@@ -5,6 +5,7 @@
 ## %######################################################%##
 
 test_that("test example tune_max", {
+  skip_on_cran()
   require(maxnet)
   require(dplyr)
 
@@ -262,6 +263,7 @@ test_that("test fit only with presences and background", {
 
 test_that("test background argument names not match
           lack of hyperparameter", {
+  skip_on_cran()
   require(maxnet)
   require(dplyr)
 

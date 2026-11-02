@@ -1,3 +1,22 @@
+# flexsdm 1.4.2
+- `tune_max`: a grid combination whose fits all failed was assigned the previous combination's model/performance (stale `mod`); now initialised to `NULL` and checked with `is.null()` (#478)
+- `fit_max`: the final refit fallback used the CV loop index in its check and could discard a successful fit; it now uses `is.null(mod)` and falls back on presences + background (`data_2`) (#478)
+- `tune_svm`: removed `na.omit()` on partition performance so all combinations are compared across the same partitions (#478)
+- `fit_gbm`: final model now uses `bag.fraction = 0.9`, consistent with the CV models; `tune_gbm` validity guard also uses 0.9 (#478)
+- `occfilt_geo`: moran method no longer collapses to one record (`Inf` distance) when no Moran's I falls in the selection window; the closest value is used, and the threshold comparison is now numeric (#479)
+- `sample_pseudoabs`: factor `maskval` now matches raster category IDs in the kmeans, env_const, env_clust and env_kmeans methods (#479)
+- `get_absences`: NA in the species column no longer creates phantom NA rows (#479)
+- `calib_area`: mcp/bmcp with three or more groups no longer errors (#479)
+- `part_sband`: fixed uninitialised `imoran_bands_c` assignment (#479)
+- CRAN review: every exported function now has a small, fast example that is executed on CRAN (the longer examples remain inside `\donttest{}`); examples of `sdm_directory()` and `homogenize_na()` / `extra_eval()` no longer leave files in the working directory or alter `par()`
+- `sdm_directory`: `main_dir` no longer defaults to a sub-folder of the working directory and must be provided by the user
+- Functions no longer call `set.seed()` with a fixed number (`fit_*`, `occfilt_geo`, `correct_colinvar`, `p_extra`, ...). Results can be reproduced by calling `set.seed()` before running them; `tune_*`, `sdm_varimp` and `sdm_uncertainty` draw the seeds used by parallel workers from the caller's random-number stream
+- `tune_gbm`, `tune_max`, `tune_net`, `tune_raf`, `tune_svm`, `sdm_varimp` and `sdm_uncertainty`: no cluster is started when `n_cores = 1`, the computation runs sequentially in the current session
+- `occfilt_geo`: the `warn` option is restored when the function exits
+- Gaussian process code used by `fit_gau()` and `esm_gau()`, `fit_max()` and `tune_max()`: `print()` and `cat()` calls replaced by `message()` or `warning()` (or removed)
+- Check time after the last CRAN incoming check (examples took 161 s and tests 104 s on win-builder): the examples executed on CRAN are now tiny toy examples without plotting (the full examples, with their plots, are inside `\donttest{}`), test files that take more than a fraction of a second are skipped as a whole on CRAN with `skip_on_cran()` (they run when `NOT_CRAN=true`), and vignette `v04` is now precomputed (source in `vignettes/v04_Red_fir_example.Rmd.orig`)
+- `DESCRIPTION`: reworded "ensembling" in the Description field
+
 # flexsdm 1.4.1 
 -  `get_absences`: Function to build a presence-absence database from multi-species occurrence data, by @sjevelazco
 -  `occ_reproject`: Function to reproject occurrence coordinates to a new coordinate reference system, by @sjevelazco
@@ -7,6 +26,15 @@
 -  `tune_max`: fixed a bug where the default hyperparameter grid (used when `grid = NULL`) tested a `regmult` step of 0.05 instead of the documented 0.5, producing ~10x more combinations than intended, by @sjevelazco
 -  Test suite and vignette runtimes were substantially reduced in response to CRAN's request (test suite ~17 min -> ~3 min; vignette rebuilding ~14 min -> ~2 min, as measured locally) by shrinking hyperparameter grids, dataset sizes, and replicate/fold counts in tests and vignettes, and by gating the most expensive/redundant test cases behind `skip_on_cran()`, by @sjevelazco
 -  Further reduced test and vignette runtimes after win-builder's automated "Overall checktime > 10 min" rejection, by gating most secondary/edge-case assertions in the `tune_*` and `sdm_uncertainty` test files behind `skip_on_cran()` (kept a representative case running on CRAN for each), and by shrinking dataset sizes and search-grid sizes (`part_sband`, `part_sblock`, `occfilt_env`, `occfilt_geo`) further in the vignettes, by @sjevelazco
+-  Test and vignette runtimes were cut again after CRAN's incoming check (tests ~6 min, vignettes ~6 min on win-builder): all but one representative `test_that()` block per test file (or none for the slowest files) now run only when `NOT_CRAN=true`, and vignettes `v01`, `v02`, `v03`, `v05` and `v06` are now precomputed (source in `vignettes/*.Rmd.orig`, excluded from the build), by @sjevelazco
+-  Shortened the `\donttest{}` examples of the slowest functions (`sdm_varimp`, `fit_max`, `fit_gau`, `tune_*`, `esm_gam`, `fit_gam`, `occfilt_geo`, `sdm_summarize`, `esm_max`) by using smaller hyperparameter grids, fewer folds/replicates and subsampled datasets (~10 min -> ~3.5 min locally), by @sjevelazco
+-  `fit_raf`: the `ntree` argument was ignored in the no-partition fit and in the cross-validation fits (hardcoded to 500); it is now used everywhere, reported in [#474](https://github.com/sjevelazco/flexsdm/issues/474), by @sjevelazco
+-  `tune_raf`: the final model now uses the tuned `ntree` instead of the `randomForest` default, [#474](https://github.com/sjevelazco/flexsdm/issues/474), by @sjevelazco
+-  `esm_gbm`: `n_trees` and `shrinkage` were hardcoded and are now forwarded to `fit_gbm`; `esm_net`: `size` and `decay` are now forwarded to `fit_net`, [#474](https://github.com/sjevelazco/flexsdm/issues/474), by @sjevelazco
+-  `esm_svm`: `performance_part` was labelled `esm_gau`; now `esm_svm`. `fit_svm` and `fit_max`: partition ids in `performance_part` were wrong (earlier folds were relabelled), [#474](https://github.com/sjevelazco/flexsdm/issues/474), by @sjevelazco
+-  Removed the DeepWiki badge from `README.md`, whose URL returned HTTP 429 in CRAN's URL check, by @sjevelazco
+-  `sdm_eval`: fixed a bug in the KAPPA metric calculation, by @sjevelazco
+-  `sample_background` and `sample_pseudoabs`: fixed three bugs in categorical `maskval`/k-means handling reported in [#472](https://github.com/sjevelazco/flexsdm/issues/472): `maskval` on a factor raster was resolved to its row position in the levels table instead of its actual category ID; the k-means branch of `sample_pseudoabs` masked and overwrote the environmental raster with the region raster instead of the other way around; and the internal `kf()` helper could fail with "differing number of rows" when the environmental raster had no NA cells, by @sjevelazco
 
 # flexsdm 1.4.0 
 -  `map_env_dist`: C++ function to calculate Euclidean and Mahalanobis distance was implemented, by @sjevelazco [463](https://github.com/sjevelazco/flexsdm/pull/463)

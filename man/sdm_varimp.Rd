@@ -76,6 +76,34 @@ This function calculates variable importance scores for species distribution mod
 Thus, the function calculates the model performance using the original data and the permuted data. The difference between the two performances is the variable importance score.
 }
 \examples{
+# Toy data: a small subset of 'abies' to keep this example fast
+data("abies")
+abies_toy <- abies[c(1:30, 701:730), ]
+abies_toy <- part_random(
+  data = abies_toy,
+  pr_ab = "pr_ab",
+  method = c(method = "kfold", folds = 3)
+)
+
+glm_toy <- fit_glm(
+  data = abies_toy,
+  response = "pr_ab",
+  predictors = c("aet", "cwd", "tmin"),
+  partition = ".part",
+  thr = "max_sens_spec"
+)
+
+# Permutation-based variable importance (few simulations to keep it fast)
+sdm_varimp(
+  models = glm_toy,
+  data = abies_toy,
+  response = "pr_ab",
+  predictors = c("aet", "cwd", "tmin"),
+  n_sim = 2,
+  n_cores = 1,
+  thr = "max_sens_spec"
+)
+
 \donttest{
 require(tidyr)
 require(dplyr)
@@ -86,19 +114,21 @@ abies
 
 data(backg)
 backg
+set.seed(1)
+backg <- backg[sample(nrow(backg), 1000), ] # subsample to speed up this example
 
 # In this example we will partition the data using the k-fold method
 
 abies2 <- part_random(
   data = abies,
   pr_ab = "pr_ab",
-  method = c(method = "kfold", folds = 5)
+  method = c(method = "kfold", folds = 3)
 )
 
 backg2 <- part_random(
   data = backg,
   pr_ab = "pr_ab",
-  method = c(method = "kfold", folds = 5)
+  method = c(method = "kfold", folds = 3)
 )
 
 max_t1 <- fit_max(
@@ -141,7 +171,7 @@ vip_t <- sdm_varimp(
   clamp = TRUE,
   pred_type = "cloglog",
   thr = c("max_sens_spec", "equal_sens_spec", "max_sorensen"),
-  n_sim = 50,
+  n_sim = 5,
   n_cores = 2
 )
 

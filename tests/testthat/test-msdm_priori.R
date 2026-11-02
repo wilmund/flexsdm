@@ -1,3 +1,5 @@
+skip_on_cran() # slow tests; they run when NOT_CRAN=true
+
 test_that("msdm_priori", {
   require(dplyr)
   require(terra)
@@ -68,6 +70,7 @@ test_that("msdm_priori", {
 
 
 test_that("function misuse", {
+  skip_on_cran()
   require(dplyr)
   require(terra)
 

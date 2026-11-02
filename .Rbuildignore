@@ -9,3 +9,5 @@ docs
 ^\.positai$
 ^\.claude$
 ^cran-comments\.md$
+^vignettes/.*\.orig$
+Rplots\.pdf$
